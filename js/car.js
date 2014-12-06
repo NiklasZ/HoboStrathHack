@@ -210,18 +210,18 @@ function addCar()
         carBody.body.debug = true;
         carBody.body.mass = 1;
         carBody.body.setCollisionGroup(CG_car);
+        carBody.body.clearShapes();
     
     
         wheel_front.body.setCircle(20);
         wheel_front.body.debug = true;
         wheel_front.body.mass = 1;
-        wheel_front.body.setCollisionGroup(CG_car);
-    
+        wheel_front.body.setCollisionGroup(CG_car);   
         wheel_back.body.setCircle(20);
         wheel_back.body.debug = true;
         wheel_back.body.mass = 1;
         wheel_back.body.setCollisionGroup(CG_car);
-    
+
 //        //Spring(world, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB)
     var spring = game.physics.p2.createSpring(carBody,wheel_front, 70, 150, 50,null,null,[30,0],null);
         addPhaserP2_debug(spring,"spring")
@@ -275,7 +275,7 @@ function initLevel()
 
 function addJump()
 {
-    var groundSegment = [[500,h],[700,h],[700,h-50]]
+    var groundSegment = [[600,h],[700,h],[700,h-50]]
     
     CG_level = game.physics.p2.createCollisionGroup(); //CAR GROUP
     
