@@ -58,7 +58,7 @@ Player = function(game) {
      		}
 		},
 
-		car_collides_with(collision_group, segment) {
+		car_collides_with: function(collision_group, segment) {
 		    segment.body.collides(this.car.collision_group);
 		    this.car.wheel_front.body.collides(collision_group);
 		    this.car.wheel_back.body.collides(collision_group);
