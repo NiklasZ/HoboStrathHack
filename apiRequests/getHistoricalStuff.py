@@ -1,8 +1,9 @@
 import blpapi
+import random
 from optparse import OptionParser
 
-stockList = ["IBM US Equity","MSFT US Equity","TSLA US Equity","SX5E:IND"]
-stockfieldList = ["PX_LAST","PX_MID","OPEN","PX_LOW","PX_HIGH"]
+stockList = ["IBM US Equity","MSFT US Equity","TSLA US Equity"]
+stockFieldList = ["PX_LAST","PX_MID","OPEN","PX_LOW","PX_HIGH"]
 dataCapPerRequest = 10000
 serverIP = '10.8.8.1'
 port = 8194
@@ -26,11 +27,18 @@ def requestBuilder(name, price, startDate, finishDate, frequency, session):
 
 #Default method
 def main():
-    makeHistoricalRequest("IBM US Equity", "PX_MID", "20120101", "20121231", "MONTHLY")
+    makeRandomHistoricalRequest("20120101", "20121231", "MONTHLY")
+
 def getStockList():
     return stockList
+
 def getStockFieldList():
     return stockFieldList
+
+def makeRandomHistoricalRequest(startDate, finishDate, frequency):
+    stock = stockList[random.randrange(0,len(stockList))]
+    field = stockFieldList[random.randrange(0,len(stockFieldList))]
+    return makeHistoricalRequest(stock,field, startDate, finishDate, frequency)
 #Use to make request
 def makeHistoricalRequest(name, price, startDate, finishDate, frequency):
 
@@ -71,9 +79,9 @@ def makeHistoricalRequest(name, price, startDate, finishDate, frequency):
                     #print msg
                     fieldDataArr = msg.getElement("securityData").getElement("fieldData")
                     for fieldData in fieldDataArr.values():
-                        data = fieldData.getElement("PX_MID")
+                        data = fieldData.getElement(price)
                         splitElement = data.toString().split()
-                        valueList.append(splitElement.pop())
+                        valueList.append(float(splitElement.pop()))
 
             if ev.eventType() == blpapi.Event.RESPONSE:
                 # Response completly received, so we could exit
@@ -83,7 +91,7 @@ def makeHistoricalRequest(name, price, startDate, finishDate, frequency):
     finally:
         # Stop the session
         session.stop()
-        #print valueList
+        print valueList
     return valueList
 
 if __name__ == "__main__":
