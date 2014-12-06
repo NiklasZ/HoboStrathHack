@@ -25,17 +25,15 @@ function create()
 {
     
     // adding P2 physics to the game
-    game.physics.startSystem(Phaser.Physics.P2JS);
-    // setting gravity
-    game.physics.p2.gravity.y = 250;
+    game.physics.startSystem(Phaser.Physics.P2JS);;
     
     game.physics.p2.restitution = 0.4;
     
     game.stage.backgroundColor = '#DDDDDD';
     
     // setting gravity
-    game.physics.p2.gravity.y = 250;
-    game.physics.p2.friction= 5;
+    game.physics.p2.gravity.y = 1000;
+    game.physics.p2.friction= 10;
     
     cursors = game.input.keyboard.createCursorKeys();
     
@@ -270,12 +268,37 @@ function initLevel()
 {
     groundGroup = game.add.group();
     
-    addJump();
+    addGroundSegments();
 }
 
-function addJump()
+/* generate ground */
+
+var groundHeights = [0,50,100,50,80,110,130,50,0];
+var segmentLength = 100;
+var groundThickness = 20;
+
+function getGroundSegment(h1, h2, XFrontPosition)
 {
-    var groundSegment = [[600,h],[700,h],[700,h-50]]
+    return [[XFrontPosition,h-h1+groundThickness],
+            [XFrontPosition+segmentLength,h-h2+groundThickness],
+            [XFrontPosition+segmentLength,h-h2],
+            [XFrontPosition,h-h1]];
+}
+
+function addGroundSegments()
+{
+    XFrontPosition = 0;
+    for (i=0; i<groundHeights.length; i++) {
+        XFrontPosition += segmentLength;
+        h1 = groundHeights[i];
+        h2 = groundHeights[i+1];
+        groundSegment = getGroundSegment(h1, h2, XFrontPosition);
+        addJump(groundSegment);
+    }
+}
+
+function addJump(groundSegment)
+{
     
     CG_level = game.physics.p2.createCollisionGroup(); //CAR GROUP
     
@@ -322,4 +345,56 @@ function updateJump()
         jump.body.reset(w+200,(h-(Math.random()*40-20)))
     }
 }
+
+/*
+function addJump()
+{
+    var groundSegment = [[600,h],[700,h],[700,h-50],[600,h-50]]
+    
+    CG_level = game.physics.p2.createCollisionGroup(); //CAR GROUP
+    
+    game.physics.p2.updateBoundsCollisionGroup(); //UPDATE COLLISION BOUND FOR GROUPS
+    
+    jump = groundGroup.create(0,0);
+    jump.anchor.setTo(0.5, 0.5)
+    game.physics.p2.enable(jump,true, true);
+    
+    jump.body.clearShapes();
+    jump.body.mass = 10;
+    jump.body.addPolygon({}, groundSegment);
+    jump.body.kinematic = true;
+    jump.body.setCollisionGroup(CG_level);
+    jump.body.fixedRotation = true;
+    jump.body.data.gravityScale = 0;
+    jump.body.collides(CG_car);
+    jump.body.collideWorldBounds = false;
+    
+    wheel_front.body.collides(CG_level);
+    wheel_back.body.collides(CG_level);
+    carBody.body.collides(CG_level);
+    
+    
+    
+    var spriteMaterial = game.physics.p2.createMaterial('spriteMaterial', wheel_front.body);
+        wheel_back.body.setMaterial(spriteMaterial)
+        
+    var worldMaterial = game.physics.p2.createMaterial('worldMaterial',jump.body);
+
+    var contactMaterial = game.physics.p2.createContactMaterial(spriteMaterial, worldMaterial);
+
+    contactMaterial.friction = 0.5;     // Friction to use in the contact of these two materials.
+
+}
+
+function updateJump()
+{
+    jump.body.velocity.y = 0;  
+    jump.body.velocity.x = wheel_back.body.angularVelocity*-10;
+    
+    if(jump.position.x < -200)
+    {
+        jump.body.reset(w+200,(h-(Math.random()*40-20)))
+    }
+}
+*/
 
