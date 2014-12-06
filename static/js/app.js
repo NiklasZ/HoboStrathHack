@@ -20,7 +20,8 @@ function preload() {
 
 function create() {
     // adding P2 physics to the game
-    app.game.physics.startSystem(Phaser.Physics.P2JS);;
+    app.game.world.setBounds(0, 0, 19200, 1000);
+    app.game.physics.startSystem(Phaser.Physics.P2JS);
     app.game.physics.p2.restitution = 0.4;
     
     app.game.stage.backgroundColor = '#DDDDDD';
@@ -32,7 +33,8 @@ function create() {
     app.arrows = app.game.input.keyboard.createCursorKeys();
     
     app.player = new Player(app.game);
-    app.ground = new Ground(app.game);    
+    app.ground = new Ground(app.game); 
+    app.game.camera.follow(app.player.car.body);   
 }
 
 function update() {
