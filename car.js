@@ -14,6 +14,8 @@ game = new Phaser.Game(w, h, Phaser.AUTO, 'gameDiv', { preload: preload, create:
 function preload() 
 {
      initPhaserP2_debug();
+      game.load.image('moto', 'assets/moto.png');
+      game.load.image('wheel', 'assets/wheel.png');
 }
 
 function create() 
@@ -192,9 +194,9 @@ function initCar()
 
 function addCar()
 {
-    carBody = game.add.sprite(100, 100);; //CARBODY
-    wheel_front = game.add.sprite(140, 130); //FRONT WHEEL
-    wheel_back = game.add.sprite(60, 130);; //BACK WHEEL 
+    carBody = game.add.sprite(100, 400,'moto');; //CARBODY
+    wheel_front = game.add.sprite(140, 430,'wheel'); //FRONT WHEEL
+    wheel_back = game.add.sprite(60, 430,'wheel');; //BACK WHEEL 
     CG_car = game.physics.p2.createCollisionGroup(); //CAR GROUP
     
     game.physics.p2.updateBoundsCollisionGroup(); //UPDATE COLLISION BOUND FOR GROUPS
