@@ -5,8 +5,11 @@ var cursor;
 
 function init()
 {
-    w = window.innerWidth;
-h = window.innerHeight;
+w = 1500;
+h = 770;
+$('.start-menu').hide();
+$('.overlay').overlay();
+
     
 game = new Phaser.Game(w, h, Phaser.AUTO, 'gameDiv', { preload: preload, create: create, update: update });
 }

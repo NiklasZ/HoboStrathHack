@@ -2,14 +2,51 @@
 <html>
 
 <head>  
-    <meta charset="utf-8" />
-    <title> Flappy Bird Clone </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script type="text/javascript" src="phaser.min.js"></script>
-    <script type="text/javascript" src="car.js"></script>
+    <title> Moto Moto Moto </title>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/overlay.js"></script>
+    <script type="text/javascript" src="js/phaser.min.js"></script>
+    <script type="text/javascript" src="js/car.js"></script>
+
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/overlay.css">
+    <link rel="stylesheet" href="css/main.css">
+
 </head>
 
-<body onload="init()">
+<body>
+ <header class="text-center">
+
+         <div class="container" style="width: 1500px; height: 800px;">
+	         <div class="row">
+	             
+	                 <div class="overlay">
+	                    <p>It sucks right now.</p>
+	                </div>
+	                <div class="start-menu" class="text-center" onclick="init()">
+	                <div class="text">
+                        <h2>Welcome to Moto Moto Moto.</h2>
+                        <p>Ride your sweet bike on those indices.</p>
+                        <a class="btn btn-primary btn-lg">Select track</a>
+                        <a class="btn btn-success btn-lg">Start game!</a>
+
+                    </div>
+	                </div>
+	         <div id="gameDiv"></div>
+         	</div>
+         </div>
+        <a data-overlay-trigger href="#!">
+            <button class="btn btn-primary btn-lg" id="help">Help</button>
+            </a>
+
  
 </body>  
 </html>
