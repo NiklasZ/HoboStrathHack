@@ -243,16 +243,20 @@ function updateCar()
     
     if (cursors.left.isDown)
     {
-        wheel_back.body.angularVelocity = -40;
-        wheel_front.body.angularVelocity = -40;
+        if (wheel_back.body.angularVelocity > -60) {
+            wheel_back.body.angularVelocity -= 4;
+            wheel_front.body.angularVelocity -= 4;
+        }
         
         game.physics.p2.walls.bottom.velocity[0] = wheel_back.body.angularVelocity+(carBody.position.x-(w/2-w/4+100))/50;
     }
     
     if (cursors.right.isDown)
     {
-        wheel_back.body.angularVelocity = +40;
-        wheel_front.body.angularVelocity = +40;
+        if (wheel_back.body.angularVelocity < 60) {
+            wheel_back.body.angularVelocity += 4;
+            wheel_front.body.angularVelocity += 4;
+        }
         
         game.physics.p2.walls.bottom.velocity[0] = wheel_back.body.angularVelocity+(carBody.position.x-(w/2-w/4))/50;
     }
