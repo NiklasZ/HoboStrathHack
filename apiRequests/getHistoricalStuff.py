@@ -1,8 +1,8 @@
 import blpapi
 from optparse import OptionParser
 
-randomIndexAndStockList = ["IBM US Equity","MSFT US Equity","TSLA US Equity"]
-fieldList = ["PX_LAST","PX_MID","OPEN","PX_LOW","PX_HIGH"]
+stockList = ["IBM US Equity","MSFT US Equity","TSLA US Equity","SX5E:IND"]
+stockfieldList = ["PX_LAST","PX_MID","OPEN","PX_LOW","PX_HIGH"]
 dataCapPerRequest = 10000
 serverIP = '10.8.8.1'
 port = 8194
@@ -24,10 +24,15 @@ def requestBuilder(name, price, startDate, finishDate, frequency, session):
 
     return request
 
+#Default method
 def main():
-    makeRequest("IBM US Equity", "PX_MID", "20120101", "20121231", "MONTHLY")
-
-def makeRequest(name, price, startDate, finishDate, frequency):
+    makeHistoricalRequest("IBM US Equity", "PX_MID", "20120101", "20121231", "MONTHLY")
+def getStockList():
+    return stockList
+def getStockFieldList():
+    return stockFieldList
+#Use to make request
+def makeHistoricalRequest(name, price, startDate, finishDate, frequency):
 
     # Fill SessionOptions
     sessionOptions = blpapi.SessionOptions()
