@@ -11,7 +11,7 @@ $('.start-menu').hide();
 $('.overlay').overlay();
 
     
-game = new Phaser.Game(w, h, Phaser.AUTO, 'gameDiv', { preload: preload, create: create, update: update });
+game = new Phaser.Game(w, h, Phaser.AUTO, 'gameDiv', { preload: preload, create: create, update: update, render: render });
 }
 
 function preload() 
@@ -188,6 +188,7 @@ function updatePhaserP2_debug()
 }
 
 var CG_car;
+var carBody;
 
 function initCar()
 {
@@ -238,7 +239,9 @@ function addCar()
         addPhaserP2_debug(constraint_1,"prismaticConstraint")
         constraint_1.lowerLimitEnabled=constraint_1.upperLimitEnabled = true;
         constraint_1.upperLimit = -1;
-        constraint_1.lowerLimit = -8;    
+        constraint_1.lowerLimit = -8;
+
+    game.camera.follow(carBody);    
 }
 
 function updateCar()
@@ -346,6 +349,12 @@ function addGroundSegments()
         XFrontPosition += segmentLength;
         addGroundSegment(XFrontPosition);
     }
+}
+
+function render(){
+    game.debug.cameraInfo(game.camera, 32, 32);
+    game.debug.spriteCoords(carBody, 32, 500);
+
 }
 
 function updateJump()

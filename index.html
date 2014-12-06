@@ -14,37 +14,28 @@
     <script src="static/js/overlay.js"></script>
     <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
     <script type="text/javascript" src="static/js/phaser.min.js"></script>
-    <script type="text/javascript" src="static/js/car.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
-    <script type="text/javascript" src="static/js/application.js"></script>
+    <script type="text/javascript" src="static/js/player.js"></script>
+    <script type="text/javascript" src="static/js/ground.js"></script>
+    <script type="text/javascript" src="static/js/app.js"></script>
   </head>
   <body>
     <header class="text-center">
-
-         <div class="container" style="width: 1500px; height: 800px;">
-         <form id="checkout" method="post" action="/checkout">
-  <div id="dropin"></div>
-  <input type="submit" value="Pay $10">
-</form>
-           <div class="row">
-               
-                   <div class="overlay">
-                      <p>It sucks right now.</p>
-                  </div>
-                  <div class="start-menu" class="text-center" onclick="init()">
-                  <div class="text">
-                        <h2>Welcome to Moto Moto Moto.</h2>
-                        <p>Ride your sweet bike on those indices.</p>
-                        <a class="btn btn-primary btn-lg">Select track</a>
-                        <a class="btn btn-success btn-lg">Start game!</a>
-
-                    </div>
-                  </div>
            <div id="gameDiv"></div>
           </div>
-         </div>
-        <a data-overlay-trigger href="#!">
-          <button class="btn btn-primary btn-lg" id="help">Help</button>
-        </a>
+            <div class="start-menu" class="text-center" onclick="init()">
+              <div class="text">
+                  <h2>Welcome to Moto Moto Moto.</h2>
+                  <p>Ride your sweet bike on those indices.</p>
+                  <a class="btn btn-primary btn-lg">Select track</a>
+                  <a class="btn btn-success btn-lg">Start game!</a>
+              </div>
+            </div>
+          <div id="gameDiv"></div>
+        </div>
+      </div>
+    <a data-overlay-trigger href="#!">
+      <button class="btn btn-primary btn-lg" id="help">Help</button>
+    </a>
    </body>
 </html>
