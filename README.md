@@ -1,3 +1,3 @@
 HoboStrathHack
 ==============
-zis is out game
+zis is our game
