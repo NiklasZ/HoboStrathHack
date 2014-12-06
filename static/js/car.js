@@ -33,8 +33,8 @@ function create()
     game.stage.backgroundColor = '#DDDDDD';
     
     // setting gravity
-    game.physics.p2.gravity.y = 1000;
-    game.physics.p2.friction= 10;
+    game.physics.p2.gravity.y = 1500;
+    game.physics.p2.friction= 15;
     
     cursors = game.input.keyboard.createCursorKeys();
     
@@ -276,9 +276,12 @@ function initLevel()
 
 /* generate ground */
 
-var groundHeights = [0,50,100,50,80,110,130,50,0];
+var groundHeights = [50,100,50,80,110,130,50,0,50,100,50,80,110,130,50,0,0,50,100,50,80,110,130,50,0];
 var segmentLength = 100;
 var groundThickness = 20;
+var groundSegmentsArray = [];
+
+var lastSegmentHeight = 0;
 
 function getGroundSegment(h1, h2, XFrontPosition)
 {
@@ -288,21 +291,17 @@ function getGroundSegment(h1, h2, XFrontPosition)
             [XFrontPosition,h-20-h1]];
 }
 
-function addGroundSegments()
+function getNewHeight()
 {
-    XFrontPosition = 0;
-    for (i=0; i<groundHeights.length; i++) {
-        XFrontPosition += segmentLength;
-        h1 = groundHeights[i];
-        h2 = groundHeights[i+1];
-        groundSegment = getGroundSegment(h1, h2, XFrontPosition);
-        addJump(groundSegment);
-    }
+    return groundHeights.shift();
 }
 
-function addJump(groundSegment)
+function addGroundSegment(position)
 {
-    
+    var newSegmentHeight = getNewHeight();
+    groundSegment = getGroundSegment(lastSegmentHeight, newSegmentHeight, position);
+    lastSegmentHeight = newSegmentHeight;
+
     CG_level = game.physics.p2.createCollisionGroup(); //CAR GROUP
     
     game.physics.p2.updateBoundsCollisionGroup(); //UPDATE COLLISION BOUND FOR GROUPS
@@ -335,18 +334,29 @@ function addJump(groundSegment)
     var contactMaterial = game.physics.p2.createContactMaterial(spriteMaterial, worldMaterial);
 
     contactMaterial.friction = 0.7;     // Friction to use in the contact of these two materials.
+    groundSegmentsArray.push(jump);
+}
 
+
+
+function addGroundSegments()
+{
+    XFrontPosition = 0;
+    for (i=0; i<groundHeights.length; i++) {
+        XFrontPosition += segmentLength;
+        addGroundSegment(XFrontPosition);
+    }
 }
 
 function updateJump()
 {
-    jump.body.velocity.y = 0;  
-    jump.body.velocity.x = wheel_back.body.angularVelocity*-10;
+    //jump.body.velocity.y = 0;  
+    //jump.body.velocity.x = wheel_back.body.angularVelocity*-10;
     
-    if(jump.position.x < -200)
-    {
-        jump.body.reset(w+200,(h-(Math.random()*40-20)))
-    }
+    //if(jump.position.x < w)
+    //{
+        //jump.body.reset(w+200,(h-(Math.random()*40-20)));
+    //}
 }
 
 /*
