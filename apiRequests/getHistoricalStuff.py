@@ -3,6 +3,7 @@ from optparse import OptionParser
 
 randomIndexAndStockList = ["IBM US Equity","MSFT US Equity","TSLA US Equity"]
 fieldList = ["PX_LAST","PX_MID","OPEN","PX_LOW","PX_HIGH"]
+dataCapPerRequest = 10000
 
 
 def parseCmdLine():
@@ -19,24 +20,30 @@ def parseCmdLine():
                       help="server port (default: %default)",
                       metavar="tcpPort",
                       default=8194)
-    #parser.add_option("-r")
 
     (options, args) = parser.parse_args()
 
     return options
 
-def requestBuilder(names, prices, startDate, finishDate, frequency):
+def requestBuilder(name, price, startDate, finishDate, frequency, session):
+
+    refDataService = session.getService("//blp/refdata")
     request = refDataService.createRequest("HistoricalDataRequest")
-    for name in names:
-        request.getElement("securities").appendValue(name)
-    for price in prices:
-        request.getElement("fields").appendValue(price)
+    request.getElement("securities").appendValue(name)
+    request.getElement("fields").appendValue(price)
 
     request.set("periodicityAdjustment", "ACTUAL")
+    request.set("periodicitySelection",frequency)
+    request.set("startDate", startDate)
+    request.set("endDate", finishDate)
+    request.set("maxDataPoints", dataCapPerRequest)
 
-    return 0
+    return request
 
 def main():
+    makeRequest()
+
+def makeRequest():
     options = parseCmdLine()
     # Fill SessionOptions
     sessionOptions = blpapi.SessionOptions()
@@ -61,39 +68,48 @@ def main():
             return
 
         # Obtain previously opened service
-        refDataService = session.getService("//blp/refdata")
-
-        # Create and fill the request for the historical data
-        request = refDataService.createRequest("HistoricalDataRequest")
-        request.getElement("securities").appendValue("IBM US Equity")
-        request.getElement("securities").appendValue("MSFT US Equity")
-        request.getElement("securities").appendValue("TSLA US Equity")
-        request.getElement("fields").appendValue("PX_HIGH")
-        request.getElement("fields").appendValue("PX_LOW")
-        request.getElement("fields").appendValue("OPEN")
-        request.set("periodicityAdjustment", "ACTUAL")
-        request.set("periodicitySelection", "MONTHLY")
-        request.set("startDate", "20120101")
-        request.set("endDate", "20121231")
-        request.set("maxDataPoints", 100)
+        request = requestBuilder("IBM US Equity", "PX_MID", "20120101", "20121231", "MONTHLY", session)
 
         print "Sending Request:", request
         # Send the request
         session.sendRequest(request)
-
         # Process received events
+        counter = 0
+        valueList = []
         while(True):
             # We provide timeout to give the chance for Ctrl+C handling:
             ev = session.nextEvent(500)
-            for msg in ev:
-                print msg
+            if counter > 2:
+                for msg in ev:
+                    print msg
+                    fieldDataArr = msg.getElement("securityData").getElement("fieldData")#.HistoricalDataResponse.securityData.fieldData[0].fieldData.date
+                    #print fieldDataArr
+                    #print fieldDataArr.elements()
+                    #fieldData = fieldDataArr.values()
+                    #while (fieldData = fieldDataArr.values().next()) != None
+                    #for fieldData in fieldDataArr.elements():
+                    for fieldData in fieldDataArr.values():
+                        data = fieldData.getElement("PX_MID")
+                        #print data.getValueAsFloat64(0)
+                        #print fieldData.getElement("PX_MID")
+                        #print data.toString()
+                        splitElement = data.toString().split()
+                        #print splitElement
+                        #print splitElement[len(splitElement)]
+                        #print 
+                        valueList.append(splitElement.pop())
+                        #valueList.append(splitElement.pop())
 
             if ev.eventType() == blpapi.Event.RESPONSE:
                 # Response completly received, so we could exit
                 break
+
+            counter = counter + 1
     finally:
         # Stop the session
         session.stop()
+        print valueList
+    return valueList
 
 if __name__ == "__main__":
     print "SimpleHistoryExample"
@@ -102,23 +118,20 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print "Ctrl+C pressed. Stopping..."
 
-__copyright__ = """
-Copyright 2012. Bloomberg Finance L.P.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to
-deal in the Software without restriction, including without limitation the
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:  The above
-copyright notice and this permission notice shall be included in all copies
-or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-IN THE SOFTWARE.
-"""
+def printField(field):
+    fldId = field.getElementAsString(FIELD_ID)
+    if field.hasElement(FIELD_INFO):
+        fldInfo = field.getElement(FIELD_INFO)
+        fldMnemonic = fldInfo.getElementAsString(FIELD_MNEMONIC)
+        fldDesc = fldInfo.getElementAsString(FIELD_DESC)
+
+        print "%s%s%s" % (fldId.ljust(ID_LEN), fldMnemonic.ljust(MNEMONIC_LEN),
+                          fldDesc.ljust(DESC_LEN))
+    else:
+        fldError = field.getElement(FIELD_ERROR)
+        errorMsg = fldError.getElementAsString(FIELD_MSG)
+
+        print
+        print " ERROR: %s - %s" % (fldId, errorMsg)
