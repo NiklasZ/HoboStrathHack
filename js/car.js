@@ -279,7 +279,7 @@ function initLevel()
 
 function addJump()
 {
-    var groundSegment = [[600,h],[700,h],[700,h-50]]
+    var groundSegment = [[600,h],[700,h],[700,h-50],[600,h-50]]
     
     CG_level = game.physics.p2.createCollisionGroup(); //CAR GROUP
     
