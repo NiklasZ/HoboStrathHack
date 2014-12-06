@@ -4,26 +4,10 @@ from optparse import OptionParser
 randomIndexAndStockList = ["IBM US Equity","MSFT US Equity","TSLA US Equity"]
 fieldList = ["PX_LAST","PX_MID","OPEN","PX_LOW","PX_HIGH"]
 dataCapPerRequest = 10000
+serverIP = '10.8.8.1'
+port = 8194
 
 
-def parseCmdLine():
-    parser = OptionParser(description="Retrieve reference data.")
-    parser.add_option("-a",
-                      "--ip",
-                      dest="host",
-                      help="server name or IP (default: %default)",
-                      metavar="ipAddress",
-                      default="localhost")
-    parser.add_option("-p",
-                      dest="port",
-                      type="int",
-                      help="server port (default: %default)",
-                      metavar="tcpPort",
-                      default=8194)
-
-    (options, args) = parser.parse_args()
-
-    return options
 
 def requestBuilder(name, price, startDate, finishDate, frequency, session):
 
@@ -41,18 +25,16 @@ def requestBuilder(name, price, startDate, finishDate, frequency, session):
     return request
 
 def main():
-    makeRequest()
+    makeRequest("IBM US Equity", "PX_MID", "20120101", "20121231", "MONTHLY")
 
-def makeRequest():
-    options = parseCmdLine()
+def makeRequest(name, price, startDate, finishDate, frequency):
+
     # Fill SessionOptions
     sessionOptions = blpapi.SessionOptions()
-    sessionOptions.setServerHost(options.host)
-    #Manual override of serverPort
-    #sessionOptions.setServerHost("10.8.1.1")
-    sessionOptions.setServerPort(options.port)
+    sessionOptions.setServerHost(serverIP)
+    sessionOptions.setServerPort(port)
 
-    print "Connecting to %s:%s" % (options.host, options.port)
+    #print "Connecting to %s:%s" % (serverIP, port)
     # Create a Session
     session = blpapi.Session(sessionOptions)
 
@@ -68,9 +50,9 @@ def makeRequest():
             return
 
         # Obtain previously opened service
-        request = requestBuilder("IBM US Equity", "PX_MID", "20120101", "20121231", "MONTHLY", session)
+        request = requestBuilder(name, price, startDate, finishDate, frequency, session)
 
-        print "Sending Request:", request
+        #print "Sending Request:", request
         # Send the request
         session.sendRequest(request)
         # Process received events
@@ -81,24 +63,12 @@ def makeRequest():
             ev = session.nextEvent(500)
             if counter > 2:
                 for msg in ev:
-                    print msg
-                    fieldDataArr = msg.getElement("securityData").getElement("fieldData")#.HistoricalDataResponse.securityData.fieldData[0].fieldData.date
-                    #print fieldDataArr
-                    #print fieldDataArr.elements()
-                    #fieldData = fieldDataArr.values()
-                    #while (fieldData = fieldDataArr.values().next()) != None
-                    #for fieldData in fieldDataArr.elements():
+                    #print msg
+                    fieldDataArr = msg.getElement("securityData").getElement("fieldData")
                     for fieldData in fieldDataArr.values():
                         data = fieldData.getElement("PX_MID")
-                        #print data.getValueAsFloat64(0)
-                        #print fieldData.getElement("PX_MID")
-                        #print data.toString()
                         splitElement = data.toString().split()
-                        #print splitElement
-                        #print splitElement[len(splitElement)]
-                        #print 
                         valueList.append(splitElement.pop())
-                        #valueList.append(splitElement.pop())
 
             if ev.eventType() == blpapi.Event.RESPONSE:
                 # Response completly received, so we could exit
@@ -108,11 +78,11 @@ def makeRequest():
     finally:
         # Stop the session
         session.stop()
-        print valueList
+        #print valueList
     return valueList
 
 if __name__ == "__main__":
-    print "SimpleHistoryExample"
+    #print "SimpleHistoryExample"
     try:
         main()
     except KeyboardInterrupt:
@@ -120,18 +90,43 @@ if __name__ == "__main__":
 
 
 
-def printField(field):
-    fldId = field.getElementAsString(FIELD_ID)
-    if field.hasElement(FIELD_INFO):
-        fldInfo = field.getElement(FIELD_INFO)
-        fldMnemonic = fldInfo.getElementAsString(FIELD_MNEMONIC)
-        fldDesc = fldInfo.getElementAsString(FIELD_DESC)
 
-        print "%s%s%s" % (fldId.ljust(ID_LEN), fldMnemonic.ljust(MNEMONIC_LEN),
-                          fldDesc.ljust(DESC_LEN))
-    else:
-        fldError = field.getElement(FIELD_ERROR)
-        errorMsg = fldError.getElementAsString(FIELD_MSG)
+#---UNUSED CODE---
+#DELETE DURING REFACTORING
 
-        print
-        print " ERROR: %s - %s" % (fldId, errorMsg)
+#options = parseCmdLine()
+
+#def parseCmdLine():
+#    parser = OptionParser(description="Retrieve reference data.")
+#    parser.add_option("-a",
+#                      "--ip",
+#                      dest="host",
+#                      help="server name or IP (default: %default)",
+#                      metavar="ipAddress",
+#                      default="localhost")
+#    parser.add_option("-p",
+#                      dest="port",
+#                      type="int",
+#                      help="server port (default: %default)",
+#                      metavar="tcpPort",
+#                      default=8194)
+#
+#    (options, args) = parser.parse_args()
+#
+#    return options
+
+# def printField(field):
+#     fldId = field.getElementAsString(FIELD_ID)
+#     if field.hasElement(FIELD_INFO):
+#         fldInfo = field.getElement(FIELD_INFO)
+#         fldMnemonic = fldInfo.getElementAsString(FIELD_MNEMONIC)
+#         fldDesc = fldInfo.getElementAsString(FIELD_DESC)
+
+#         print "%s%s%s" % (fldId.ljust(ID_LEN), fldMnemonic.ljust(MNEMONIC_LEN),
+#                           fldDesc.ljust(DESC_LEN))
+#     else:
+#         fldError = field.getElement(FIELD_ERROR)
+#         errorMsg = fldError.getElementAsString(FIELD_MSG)
+
+#         print
+#         print " ERROR: %s - %s" % (fldId, errorMsg)
