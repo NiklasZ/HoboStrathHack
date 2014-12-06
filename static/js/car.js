@@ -38,7 +38,7 @@ function create()
     
     cursors = game.input.keyboard.createCursorKeys();
     
-    drag();
+    //drag();
     initCar();
     initLevel();
 }
@@ -70,11 +70,11 @@ function initPhaserP2_debug()
     line = new Phaser.Line(0, 0, 200, 200);
     
     //DRAG
-    game.input.onDown.add(click, this);
-    game.input.onUp.add(stopDrag, this);
+    /*game.input.onDown.add(click, this);
+    game.input.onUp.add(stopDrag, this);*/
 }
 
-function drag()
+/*function drag()
 {
     //MOUSE TARGET
     mousePointer = game.add.sprite(200, 200);
@@ -104,7 +104,7 @@ function stopDrag(pointer)
 
 
 
-
+*/
 function addPhaserP2_debug(P2_object,type)
 {
     if(type == "spring")
@@ -175,7 +175,7 @@ function updatePhaserP2_debug()
         
     }
     
-    if(target)
+    /*if(target)
     {
         mousePointer.body.velocity.x = (game.input.activePointer.x - mousePointer.position.x)*20;
         mousePointer.body.velocity.y = (game.input.activePointer.y - mousePointer.position.y)*20;
@@ -184,7 +184,7 @@ function updatePhaserP2_debug()
     {
         mousePointer.body.velocity.x = 0;
         mousePointer.body.velocity.y = 0;
-    }
+    }*/
 }
 
 var CG_car;
@@ -282,10 +282,10 @@ var groundThickness = 20;
 
 function getGroundSegment(h1, h2, XFrontPosition)
 {
-    return [[XFrontPosition,h-h1+groundThickness],
-            [XFrontPosition+segmentLength,h-h2+groundThickness],
-            [XFrontPosition+segmentLength,h-h2],
-            [XFrontPosition,h-h1]];
+    return [[XFrontPosition,h-20-h1+groundThickness],
+            [XFrontPosition+segmentLength,h-20-h2+groundThickness],
+            [XFrontPosition+segmentLength,h-20-h2],
+            [XFrontPosition,h-20-h1]];
 }
 
 function addGroundSegments()
@@ -312,7 +312,7 @@ function addJump(groundSegment)
     game.physics.p2.enable(jump,true, true);
     
     jump.body.clearShapes();
-    jump.body.mass = 10;
+    jump.body.mass = 1;
     jump.body.addPolygon({}, groundSegment);
     jump.body.kinematic = true;
     jump.body.setCollisionGroup(CG_level);
@@ -334,7 +334,7 @@ function addJump(groundSegment)
 
     var contactMaterial = game.physics.p2.createContactMaterial(spriteMaterial, worldMaterial);
 
-    contactMaterial.friction = 0.5;     // Friction to use in the contact of these two materials.
+    contactMaterial.friction = 0.7;     // Friction to use in the contact of these two materials.
 
 }
 
