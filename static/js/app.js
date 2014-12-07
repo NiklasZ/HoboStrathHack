@@ -2,11 +2,13 @@ app = {
     game: null,
     width: 1500,
     height: 770,
-    cursor: null
+    cursor: null,
+    score: 0
 };
 
 $(function(){
     $('.start-menu').hide();
+    $('.info-board').hide();
     $("#start").click(init);
 
     if(document.domain){
@@ -26,6 +28,7 @@ $(function(){
 });
 
 function init() {
+    $('.info-board').toggle("slide", { direction: "left" }, 700);
     $('.start-menu').hide();
     $('.overlay').overlay();
        
@@ -65,6 +68,10 @@ function update() {
         app.player.accelerate_car(4);
     }
     updateGround();
+    
+     $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
+     if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
+
 }
 
 function generatePoint(){
