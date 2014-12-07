@@ -105,21 +105,21 @@ def normalize_heights():
             max = height
     normalized_heights = map(lambda h:(h-min)*(500.0/(max-min))-100, heights)
 
+def getHeightDeltas(heights):
+    deltas = []
+    heights_len = len(heights)
+    for i in range(0, heights_len-1):
+        deltas[i] =  (heights[i-1] - heights[i])/heights(i)
+    print deltas
+    return deltas
+
 if __name__ == '__main__':
     initData()
     # heights = makeHistoricalRequest('Allianz SE', 'dax', 'PX_MID', '20140101', '20140801', 'DAILY')
     special_data = specialAndyRequestRequest('20140101', '20141001', 'DAILY')
     heights = special_data['Data']
-    heightPercentageDeltas = getHeightDeltas(heights)
+    #heightPercentageDeltas = getHeightDeltas(heights)
     stock_name = special_data['Stock Name']
     normalize_heights()
     print 'Loaded data from the API'
     socketio.run(app, host='0.0.0.0')
-
-def getHeightDeltas(heights):
-    deltas = []
-    heights_len = len(heights)
-    for i in range(0, heights_len-1)
-        deltas[i] =  (heights[i-1] - heights[i])/heights(i)
-    print deltas
-    return deltas
