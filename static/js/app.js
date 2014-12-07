@@ -6,9 +6,6 @@ app = {
 };
 
 $(function(){
-    io.configure('production', function () {
-        io.set('transports', ['jsonp-polling']);
-    });
     app.socket = io.connect('http://'+ document.domain +':5000/race');
     app.socket.on('connect', function() {
         console.log('Connected to the server');
