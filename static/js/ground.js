@@ -1,36 +1,37 @@
 Ground = function(game, heights) {
     var obj = {
-    	HEIGHTS: heights || [50,100,50,80,110,130,50,0,50,100,50,80,110,130,50,0,0,50,100,50,80,110,130,50,0],
+    	HEIGHTS: [100,120,60,30,60,56,70,120],
     	SEGMENT_LENGTH: 100,
     	THICKNESS: 20,
+
 
     	game: game,
     	_ground: game.add.group(),
     	last_height: 0,
+        last_position: 0,
 
     	segments: [],
 
     	addSegments: function() {
-    		var pos = 0;
-    		while(this.HEIGHTS.length > 0){
-    			this.addSegment(pos);
-    			pos += this.SEGMENT_LENGTH;
+    		while(this.HEIGHTS.length){
+    			this.addSegment(this.last_position);
+    			this.last_position += this.SEGMENT_LENGTH;
     		}
     	},
 
-    	getPolygon: function(last_height, height, pos) {
+    	getPolygon: function(last_height, height, last_position) {
     		var h = app.height;
 		    return [
-		    	[pos, h - last_height + this.THICKNESS],
-	        	[pos + this.SEGMENT_LENGTH, h - height + this.THICKNESS],
-	            [pos + this.SEGMENT_LENGTH, h - height],
-	            [pos, h - last_height]
+		    	[this.last_position, h - last_height + this.THICKNESS],
+	        	[this.last_position + this.SEGMENT_LENGTH, h - height + this.THICKNESS],
+	            [this.last_position + this.SEGMENT_LENGTH, h - height],
+	            [this.last_position, h - last_height]
 	        ];
     	},
 
-    	addSegment: function(pos) {
+    	addSegment: function(last_position) {
     		var height = this.HEIGHTS.shift();
-    		var segmentShape = this.getPolygon(this.last_height, height, pos);
+    		var segmentShape = this.getPolygon(this.last_height, height, this.last_position);
     		this.last_height = height;
 
     		var collision_group = game.physics.p2.createCollisionGroup();

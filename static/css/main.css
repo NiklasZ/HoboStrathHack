@@ -3,6 +3,17 @@ header {
 }
 body { background: #E9E9E9; }
 
+
+.info-board{
+	position: absolute;
+	z-index: 10;
+	background-color: #666699;
+	border-top-right-radius: 15px;
+	border-top-left-radius: 15px;
+	width: 1506px;
+	height: 70px;
+
+}
 .start-menu {
 	position: relative;
 	z-index: 7;
@@ -28,6 +39,10 @@ body { background: #E9E9E9; }
 
 #gameDiv{
 	position: absolute;
+	border-radius: 15px;
+	border-color: #3f3f4f;
+	border-style: solid;
+
 }
 
 #help{
