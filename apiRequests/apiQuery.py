@@ -73,7 +73,7 @@ def makeIntraRequest(name, price, startDate, finishDate, frequency, session):
 #Default method
 def main():
     initData()
-    makeHistoricalRequest("GKN LN Equity","PX_MID","20120101", "20121231", "MONTHLY")
+    makeHistoricalRequest("Allianz SE",'dax.csv',"PX_MID","20140101", "20140801", "DAILY")
     #readInStocks('dax.csv', daxTickerList, daxNameList)
     #makeRandomHistoricalRequest(daxFileName,"20120101", "20121231", "MONTHLY")
 
@@ -167,8 +167,9 @@ def makeRandomHistoricalRequest(index, startDate, finishDate, frequency):
     return makeHistoricalRequest(stock, field, startDate, finishDate, frequency)
 
 #Use to make request, Note "name" refers to the actual stock's name not its ticker.
-def makeHistoricalRequest(name, priceField, startDate, finishDate, frequency):
+def makeHistoricalRequest(name, index, priceField, startDate, finishDate, frequency):
 
+    tickerName = getMatchingTicker(name, index);
     # Fill SessionOptions
     sessionOptions = blpapi.SessionOptions()
     sessionOptions.setServerHost(serverIP)
@@ -189,7 +190,7 @@ def makeHistoricalRequest(name, priceField, startDate, finishDate, frequency):
             return
 
         # Obtain previously opened service
-        request = makeHistoryRequest(name, priceField, startDate, finishDate, frequency, session)
+        request = makeHistoryRequest(tickerName, priceField, startDate, finishDate, frequency, session)
 
         #print "Sending Request:", request
         # Send the request
