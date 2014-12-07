@@ -40,7 +40,23 @@ def readInStocks(fileName, tickerList, nameList):
     #print nameList
 
 #Builds a request for a HistoricalDataRequest
-def requestBuilder(name, price, startDate, finishDate, frequency, session):
+def makeHistoryRequest(name, price, startDate, finishDate, frequency, session):
+
+    refDataService = session.getService("//blp/refdata")
+    request = refDataService.createRequest("HistoricalDataRequest")
+    request.getElement("securities").appendValue(name)
+    request.getElement("fields").appendValue(price)
+
+    request.set("periodicityAdjustment", "ACTUAL")
+    request.set("periodicitySelection",frequency)
+    request.set("startDate", startDate)
+    request.set("endDate", finishDate)
+    request.set("maxDataPoints", dataCapPerRequest)
+
+    return request
+
+#Builds a request for an IntraBarRequest
+def makeIntraRequest(name, price, startDate, finishDate, frequency, session):
 
     refDataService = session.getService("//blp/refdata")
     request = refDataService.createRequest("HistoricalDataRequest")
@@ -60,7 +76,7 @@ def main():
     initData()
     #makeHistoricalRequest("GKN LN Equity",daxFileName,"PX_MID","20120101", "20121231", "MONTHLY")
     #readInStocks('dax.csv', daxTickerList, daxNameList)
-    #makeRandomHistoricalRequest(daxFileName,"20120101", "20121231", "MONTHLY")
+    makeRandomHistoricalRequest(daxFileName,"20120101", "20121231", "MONTHLY")
 
 #Getters
 def getStockNameList(name):
@@ -115,7 +131,7 @@ def makeIntraDayBarRequest():
             return
 
         # Obtain previously opened service
-        request = requestBuilder(name, priceField, startDate, finishDate, frequency, session)
+        request = makeIntraRequest(name, priceField, startDate, finishDate, frequency, session)
 
         # Send the request
         session.sendRequest(request)
@@ -175,7 +191,7 @@ def makeHistoricalRequest(name, index, priceField, startDate, finishDate, freque
             return
 
         # Obtain previously opened service
-        request = requestBuilder(name, priceField, startDate, finishDate, frequency, session)
+        request = makeHistoryRequest(name, priceField, startDate, finishDate, frequency, session)
 
         #print "Sending Request:", request
         # Send the request
@@ -203,7 +219,7 @@ def makeHistoricalRequest(name, index, priceField, startDate, finishDate, freque
     finally:
         # Stop the session
         session.stop()
-        #print valueList
+        print valueList
     return valueList
 
 if __name__ == "__main__":
