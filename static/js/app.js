@@ -4,7 +4,8 @@ app = {
     height: 770,
     cursor: null,
     score: 0,
-    competitors: {}
+    competitors: {},
+    active_segment: 0
 };
 
 $(function(){
@@ -53,7 +54,7 @@ function init() {
     $('.overlay').overlay();
 
        
-    app.game = new Phaser.Game(app.width, app.height, Phaser.CANVAS, 'gameDiv', { preload: preload, create: create, update: update });
+    app.game = new Phaser.Game(app.width, app.height, Phaser.CANVAS, 'gameDiv', { preload: preload, create: create, update: update, render: render });
 }
 
 function preload() {
@@ -112,6 +113,16 @@ function update() {
         app.player.accelerate_car(0);
     }
 
+    
+    app.ground.updateSegments();
+    for (var i = 0; i < app.ground.segments.length; i++) {
+        if(app.player.car.body.x >= app.ground.segments[i].x && app.player.car.body.x <=  app.ground.segments[i].x+100){
+            app.active_segment = app.ground.segments[i].raw_value;
+            //console.log(app.ground.segments[i].raw_value);
+            break;
+        }
+    };
+
     $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
     if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
 
@@ -166,7 +177,12 @@ function explosion() {
     
 
 }
-
 function drawAxes(){
     
+}
+
+function render () {
+
+    app.game.debug.text('Historical stock price: ' + app.active_segment.toFixed(2), 100, 132, "#666699","16px Verdana");
+
 }

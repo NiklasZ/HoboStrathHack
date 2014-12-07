@@ -39,6 +39,17 @@
   border: 5px solid #99CCFF;
 }
 
+#number{
+  height: 30px;
+  z-index: 1000;
+}
+
+
+#name{
+  height: 30px;
+  z-index: 1000;
+}
+
 .overlay form {
   position: absolute;
   background: rgba(255,255,255,1);
@@ -54,7 +65,7 @@
   margin-left: auto;
   margin-right: auto;
   opacity: 1;
-  z-index: 1000;
+  z-index: 100;
   font-size: medium;
   background-color: #FFF;
   border-color: #99CCFF;

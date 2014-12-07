@@ -9,6 +9,7 @@ Ground = function(game) {
     	last_height: 0,
         last_position: 0,
         emmited: -1,
+        active_segment: null,
 
     	segments: [],
         polygons: [],
@@ -25,7 +26,7 @@ Ground = function(game) {
             while(position - app.player.car.body.x < 2000){
                 this.addLine(position);
                 if(!app.online){
-                    this.addSegment(position, this.getHeight(position));
+                    this.addSegment(position, this.getHeight(position),this.getHeight(position);
                 }else{
                     var i = position / this.SEGMENT_LENGTH;
                     if(this.emmited < i){
@@ -44,6 +45,7 @@ Ground = function(game) {
                 this.gridLines[0].destroy();
                 this.gridLines.shift();
             }
+
         },
 
     	getPolygon: function(last_height, height, position) {
