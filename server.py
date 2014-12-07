@@ -6,12 +6,15 @@ import random
 from threading import Thread
 from flask import Flask, render_template, session, request
 from flask.ext.socketio import SocketIO, emit, join_room, leave_room, session
+from flask.ext.cors import CORS, cross_origin
 from player import Player
+from apiQuery import makeHistoricalRequest, initData
 
 app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
+cors = CORS(app)
 thread = None
 players = dict()
 
@@ -23,7 +26,6 @@ def background_thread():
         #socketio.emit('my response',
         #              {'data': 'Server generated event', 'count': count},
         #              namespace='/test')
-
 
 @app.route('/')
 def index():
@@ -41,6 +43,10 @@ def index():
 @socketio.on('connect', namespace='/race')
 def client_connect():
     print(get_player(session['sid']).sid)
+
+    initData()
+    print makeHistoricalRequest('Allianz SE', 'apiRequests/dax.csv', 'PX_MID', '20140101', '20140801', 'DAILY')
+
     emit('start','test')
 
 def get_player(sid):

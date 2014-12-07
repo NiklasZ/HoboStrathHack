@@ -4,15 +4,15 @@ import csv
 from optparse import OptionParser
 
 #Global vars
-daxFileName = 'dax.csv'
+daxFileName = 'apiRequests/dax.csv'
 daxTickerList = []
 daxNameList = []
 
-ukxFileName = 'ukx.csv'
+ukxFileName = 'apiRequests/ukx.csv'
 ukxTickerList = []
 ukxNameList = []
 
-spx500FileName = 'spx500.csv'
+spx500FileName = 'apiRequests/spx500.csv'
 spx500TickerList = []
 spx500NameList = []
 
