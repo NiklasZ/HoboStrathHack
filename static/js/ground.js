@@ -51,7 +51,7 @@ Ground = function(game, heights) {
 
 			segment.body.setMaterial(this.material);
 		    var contactMaterial = this.game.physics.p2.createContactMaterial(app.player.car.material, this.material);
-		    contactMaterial.friction = 5;     // Friction to use in the contact of these two materials.
+		    contactMaterial.friction = 3;     // Friction to use in the contact of these two materials.
 
     		//game.physics.p2.updateBoundsCollisionGroup();
 		    
