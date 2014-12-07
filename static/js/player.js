@@ -32,18 +32,18 @@ Player = function(game) {
 	car.wheel_front.body.setMaterial(car.material);
 	car.wheel_back.body.setMaterial(car.material);
 
-    car.spring_front = game.physics.p2.createSpring(car.body, car.wheel_front, 70, 150, 50, null, null, [30,0], null);
-    car.spring_back = game.physics.p2.createSpring(car.body, car.wheel_back, 70, 150, 50, null, null, [-30,0], null);
+    car.spring_front = game.physics.p2.createSpring(car.body, car.wheel_front, 65, 500, 150, null, null, [35,0], null);
+    car.spring_back = game.physics.p2.createSpring(car.body, car.wheel_back, 65, 500, 150, null, null, [-35,0], null);
     //Spring(world, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB)
 
     var constraint = game.physics.p2.createPrismaticConstraint(car.body, car.wheel_front, false,[30,0],[0,0],[0,1]);
     constraint.lowerLimitEnabled = constraint.upperLimitEnabled = true;
     constraint.upperLimit = -1;
-    constraint.lowerLimit = -8;    
+    constraint.lowerLimit = -2;    
     var constraint_1 = game.physics.p2.createPrismaticConstraint(car.body, car.wheel_back, false,[-30,0],[0,0],[0,1]);
     constraint_1.lowerLimitEnabled = constraint_1.upperLimitEnabled = true;
     constraint_1.upperLimit = -1;
-    constraint_1.lowerLimit = -8;    
+    constraint_1.lowerLimit = -2;    
 
     game.physics.p2.updateBoundsCollisionGroup();
 
