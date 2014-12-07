@@ -4,14 +4,17 @@ import csv
 from optparse import OptionParser
 
 #Global vars
+daxName = 'dax'
 daxFileName = 'apiRequests/dax.csv'
 daxTickerList = []
 daxNameList = []
 
+ukxName = 'ukx'
 ukxFileName = 'apiRequests/ukx.csv'
 ukxTickerList = []
 ukxNameList = []
 
+spx500Name = 'spx500'
 spx500FileName = 'apiRequests/spx500.csv'
 spx500TickerList = []
 spx500NameList = []
@@ -73,25 +76,26 @@ def makeHistoryRequest(name, price, startDate, finishDate, frequency, session):
 #Default method
 def main():
     initData()
-    makeHistoricalRequest("Allianz SE",'apiRequests/dax.csv',"PX_MID","20140101", "20140801", "DAILY")
+    #specialAndyRequestRequest("20140101", "20140801", "DAILY")
+    #makeHistoricalRequest("Allianz SE",'apiRequests/dax.csv',"PX_MID","20140101", "20140801", "DAILY")
     #readInStocks('dax.csv', daxTickerList, daxNameList)
     #makeRandomHistoricalRequest(daxFileName,"20120101", "20121231", "MONTHLY")
 
 #Getters
 def getStockNameList(name):
-    if(name == daxFileName):
+    if(name == daxName):
         return daxNameList
-    elif(name == ukxFileName):
+    elif(name == ukxName):
         return ukxNameList
-    elif(name == spx500FileName):
+    elif(name == spx500Name):
         return spx500NameList
 
 def getStockTickerList(name):
-    if(name == daxFileName):
+    if(name == daxName):
         return daxTickerList
-    elif(name == ukxFileName):
+    elif(name == ukxName):
         return ukxTickerList
-    elif(name == spx500FileName):
+    elif(name == spx500Name):
         return spx500TickerList
 
 def getMatchingTicker(stock, index):
@@ -102,7 +106,7 @@ def getMatchingTicker(stock, index):
 def getMatchingStock(ticker, index):
     tickerList = getStockTickerList(index)
     stockNameList = getStockNameList(index)
-    return stockNameList[tickerListList.index(ticker)]
+    return stockNameList[tickerList.index(ticker)]
 
 def getStockFieldList(name):
     return stockFieldList
@@ -158,6 +162,29 @@ def getStockFieldList(name):
 #         session.stop()
 #         #print valueList
 #     return valueList
+def specialAndyRequestRequest(startDate, finishDate, frequency):
+    number = random.randrange(0,3)
+    if(number == 0):
+        index = daxName
+        tickerList = daxTickerList
+        nameList = daxNameList
+    elif(number == 1):
+        index = ukxName
+        tickerList = ukxTickerList
+        nameList = ukxNameList 
+    elif(number == 2):
+        index = spx500Name
+        tickerList = spx500TickerList
+        nameList = spx500NameList
+    
+    priceField = "PX_MID"
+    stock = tickerList[random.randrange(0,len(tickerList))]
+    stockName = nameList[tickerList.index(stock)]
+    data = makeHistoricalRequest(stockName, index, priceField, startDate, finishDate, frequency)
+    #print data
+    dictionary = {"Stock Name": stockName, "Index": index, "Data": data}
+    #print dictionary
+    return dictionary
 
 #Random historical Data Request
 def makeRandomHistoricalRequest(index, startDate, finishDate, frequency):
@@ -216,7 +243,7 @@ def makeHistoricalRequest(name, index, priceField, startDate, finishDate, freque
             counter = counter + 1
     finally:
         # Stop the session
-        print valueList
+        #print valueList
         session.stop()
     return valueList
 
