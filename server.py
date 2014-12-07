@@ -8,7 +8,7 @@ from flask import Flask, render_template, session, request, jsonify
 from flask.ext.socketio import SocketIO, emit, join_room, leave_room, session
 from flask.ext.cors import CORS, cross_origin
 from player import Player
-from apiQuery import makeHistoricalRequest, initData
+from apiQuery import specialAndyRequestRequest, initData
 
 app = Flask(__name__)
 app.debug = True
@@ -18,6 +18,7 @@ cors = CORS(app)
 thread = None
 players = dict()
 heights = list()
+stock_name = ''
 normalized_heights = list()
 
 def background_thread():
@@ -45,6 +46,7 @@ def client_connect():
     sid = get_player(session['sid']).sid
     print(sid)
     emit('player_info', sid)
+    emit('track_info', {"name": stock_name})
 
 @socketio.on('get_height', namespace='/race')
 def get_height(msg):
@@ -78,7 +80,10 @@ def normalize_heights():
 
 if __name__ == '__main__':
     initData()
-    heights = makeHistoricalRequest('Allianz SE', 'dax', 'PX_MID', '20140101', '20140801', 'DAILY')
+    # heights = makeHistoricalRequest('Allianz SE', 'dax', 'PX_MID', '20140101', '20140801', 'DAILY')
+    special_data = specialAndyRequestRequest('20140101', '20141001', 'DAILY')
+    heights = special_data['Data']
+    stock_name = special_data['Stock Name']
     normalize_heights()
     print 'Loaded data from the API'
     socketio.run(app, host='0.0.0.0')
