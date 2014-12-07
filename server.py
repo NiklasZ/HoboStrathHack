@@ -22,11 +22,11 @@ normalized_heights = list()
 
 def background_thread():
     while True:
-        time.sleep(10)
-        #count += 1
-        #socketio.emit('my response',
-        #              {'data': 'Server generated event', 'count': count},
-        #              namespace='/test')
+        time.sleep(0.05)
+        data = dict()
+        for sid, player in players.iteritems():
+            data[sid] = player.get_data()
+        socketio.emit('broadcast_positions', data, namespace='/race')
 
 @app.route('/')
 def index():  
@@ -42,7 +42,9 @@ def index():
 
 @socketio.on('connect', namespace='/race')
 def client_connect():
-    print(get_player(session['sid']).sid)
+    sid = get_player(session['sid']).sid
+    print(sid)
+    emit('player_info', sid)
 
 @socketio.on('get_height', namespace='/race')
 def get_height(msg):
@@ -52,10 +54,15 @@ def get_height(msg):
         height = 0
     emit('data', {"height": height, "pos": msg})
 
+@socketio.on('send_position', namespace='/race')
+def send_position(msg):
+    player = get_player(session['sid'])
+    player.set_position(msg)
+
 def get_player(sid):
     if not sid in players:
         players[sid] = Player(sid)
-    return players[sid]    
+    return players[sid]
 
 def normalize_heights():
     global normalized_heights

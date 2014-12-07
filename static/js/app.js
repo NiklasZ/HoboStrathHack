@@ -3,7 +3,8 @@ app = {
     width: 1500,
     height: 770,
     cursor: null,
-    score: 0
+    score: 0,
+    competitors: {}
 };
 
 $(function(){
@@ -21,7 +22,16 @@ $(function(){
         app.socket.on('data', function(msg) {
             console.log('Got data for ', msg);
             app.ground.addSegment(msg.pos * app.ground.SEGMENT_LENGTH, msg.height);
+        });
+
+        app.socket.on('broadcast_positions', function(msg) {
+            show_competitors(msg);
         }); 
+
+        app.socket.on('player_info', function(msg) {
+            console.log('Player info', msg);
+            app.sid = msg;
+        });
     }  
 });
 
@@ -57,7 +67,9 @@ function create() {
     app.ground = new Ground(app.game);
     app.player = new Player(app.game);
     app.ground.updateSegments(); 
-    app.game.camera.follow(app.player.car.body);   
+    app.game.camera.follow(app.player.car.body);
+
+    app._competitors = app.game.add.group();
 }
 
 function update() {
@@ -72,4 +84,19 @@ function update() {
 
     $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
     if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
+
+    app.player.send_car_position();
+}
+
+function show_competitors(data) {
+    if(!app.game || !app._competitors)return;
+    for(var sid in data){
+        if(sid != app.sid){
+            var player_data = data[sid];
+            if(!app.competitors[sid]){
+                app.competitors[sid] = new Competitor(app._competitors);
+            }
+            app.competitors[sid].updatePosition(player_data);
+        }
+    }
 }

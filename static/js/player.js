@@ -70,6 +70,17 @@ Player = function(game) {
 		    this.car.wheel_front.body.collides(collision_group);
 		    this.car.wheel_back.body.collides(collision_group);
 		    this.car.body.body.collides(collision_group);
-		}
+		},
+
+        send_car_position: function() {
+            if(app.online){
+                var data = {
+                    x: this.car.body.x,
+                    y: this.car.body.y,
+                    r: this.car.body.rotation
+                };
+                app.socket.emit('send_position', data);
+            }
+        }
 	}
 }
