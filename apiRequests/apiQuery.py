@@ -17,6 +17,7 @@ spx500TickerList = []
 spx500NameList = []
 
 stockFieldList = ["PX_MID","PX_LAST","PX_OPEN","PX_LOW","PX_HIGH","PX_VOLUME"]
+intraBarRequestFieldList = ["TRADE","BEST","ASK","BEST_BID","BEST_ASK"]
 
 dataCapPerRequest = 10000
 serverIP = '10.8.8.1'
@@ -40,12 +41,26 @@ def readInStocks(fileName, tickerList, nameList):
     #print nameList
 
 #Builds a request for a HistoricalDataRequest
-def requestBuilder(name, price, startDate, finishDate, frequency, session):
+def makeHistoryRequest(name, price, startDate, finishDate, frequency, session):
 
     refDataService = session.getService("//blp/refdata")
     request = refDataService.createRequest("HistoricalDataRequest")
     request.getElement("securities").appendValue(name)
     request.getElement("fields").appendValue(price)
+
+    #request.set("security", name)
+    request.set("periodicitySelection",frequency)
+    request.set("startDate", startDate)
+    request.set("endDate", finishDate)
+    request.set("maxDataPoints", dataCapPerRequest)
+
+    return request
+
+#Builds a request for an IntraBarRequest
+def makeIntraRequest(name, price, startDate, finishDate, frequency, session):
+
+    refDataService = session.getService("//blp/refdata")
+    request = refDataService.createRequest("IntradayBarRequest")
 
     request.set("periodicityAdjustment", "ACTUAL")
     request.set("periodicitySelection",frequency)
@@ -58,7 +73,7 @@ def requestBuilder(name, price, startDate, finishDate, frequency, session):
 #Default method
 def main():
     initData()
-    #makeHistoricalRequest("GKN LN Equity",daxFileName,"PX_MID","20120101", "20121231", "MONTHLY")
+    makeHistoricalRequest("GKN LN Equity","PX_MID","20120101", "20121231", "MONTHLY")
     #readInStocks('dax.csv', daxTickerList, daxNameList)
     #makeRandomHistoricalRequest(daxFileName,"20120101", "20121231", "MONTHLY")
 
@@ -107,7 +122,7 @@ def makeIntraDayBarRequest():
         print "Failed to start session."
         return
     #test
-
+    valueList = []
     try:
         # Open service to get historical data from
         if not session.openService("//blp/refdata"):
@@ -115,13 +130,12 @@ def makeIntraDayBarRequest():
             return
 
         # Obtain previously opened service
-        request = requestBuilder(name, priceField, startDate, finishDate, frequency, session)
+        request = makeIntraRequest(name, priceField, startDate, finishDate, frequency, session)
 
         # Send the request
         session.sendRequest(request)
         # Process received events
         counter = 0
-        valueList = []
         while(True):
             # We provide timeout to give the chance for Ctrl+C handling:
             ev = session.nextEvent(500)
@@ -150,10 +164,10 @@ def makeRandomHistoricalRequest(index, startDate, finishDate, frequency):
     stock = getStockTickerList(index)[random.randrange(0,len(getStockTickerList(index)))]
     field = stockFieldList[random.randrange(0,len(stockFieldList))]
     #print stock
-    return makeHistoricalRequest(stock, index, field, startDate, finishDate, frequency)
+    return makeHistoricalRequest(stock, field, startDate, finishDate, frequency)
 
 #Use to make request, Note "name" refers to the actual stock's name not its ticker.
-def makeHistoricalRequest(name, index, priceField, startDate, finishDate, frequency):
+def makeHistoricalRequest(name, priceField, startDate, finishDate, frequency):
 
     # Fill SessionOptions
     sessionOptions = blpapi.SessionOptions()
@@ -162,7 +176,7 @@ def makeHistoricalRequest(name, index, priceField, startDate, finishDate, freque
 
     # Create a Session
     session = blpapi.Session(sessionOptions)
-
+    valueList = []
     # Start a Session
     if not session.start():
         print "Failed to start session."
@@ -175,14 +189,13 @@ def makeHistoricalRequest(name, index, priceField, startDate, finishDate, freque
             return
 
         # Obtain previously opened service
-        request = requestBuilder(name, priceField, startDate, finishDate, frequency, session)
+        request = makeHistoryRequest(name, priceField, startDate, finishDate, frequency, session)
 
         #print "Sending Request:", request
         # Send the request
         session.sendRequest(request)
         # Process received events
         counter = 0
-        valueList = []
         while(True):
             # We provide timeout to give the chance for Ctrl+C handling:
             ev = session.nextEvent(500)
@@ -203,7 +216,7 @@ def makeHistoricalRequest(name, index, priceField, startDate, finishDate, freque
     finally:
         # Stop the session
         session.stop()
-        #print valueList
+        print valueList
     return valueList
 
 if __name__ == "__main__":
