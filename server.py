@@ -46,16 +46,25 @@ def index():
     if not 'sid' in session:
         session['sid'] = int(random.random()*1000000)
         get_player(session['sid'])
+    if 'paid' in session:
+        paid = session['paid']
+    else:    
+        paid = False
 
-    return render_template('index.html', client_token = braintree.ClientToken.generate()) 
+    return render_template('index.html', client_token = braintree.ClientToken.generate(), paid = '$$$' if paid else '' ) 
 
-@app.route("/purchases", methods=["POST"])
-def create_purchase():
+@app.route("/checkout", methods=["POST"])
+def create_transaction():
     nonce = request.form["payment_method_nonce"]
-    print braintree.Transaction.sale({
+    result = braintree.Transaction.sale({
         "amount": "10.00",
         "payment_method_nonce": "nonce-from-the-client"
     })
+    if result.is_success:
+        session['paid'] = True
+        return render_template('payment_successful.html') 
+    else:
+        return render_template('payment_unsuccessful.html')
 
 @socketio.on('connect', namespace='/race')
 def client_connect():
@@ -96,21 +105,21 @@ def normalize_heights():
             max = height
     normalized_heights = map(lambda h:(h-min)*(500.0/(max-min))-100, heights)
 
+def getHeightDeltas(heights):
+    deltas = []
+    heights_len = len(heights)
+    for i in range(0, heights_len-1):
+        deltas[i] =  (heights[i-1] - heights[i])/heights(i)
+    print deltas
+    return deltas
+
 if __name__ == '__main__':
     initData()
     # heights = makeHistoricalRequest('Allianz SE', 'dax', 'PX_MID', '20140101', '20140801', 'DAILY')
     special_data = specialAndyRequestRequest('20140101', '20141001', 'DAILY')
     heights = special_data['Data']
-    heightPercentageDeltas = getHeightDeltas(heights)
+    #heightPercentageDeltas = getHeightDeltas(heights)
     stock_name = special_data['Stock Name']
     normalize_heights()
     print 'Loaded data from the API'
     socketio.run(app, host='0.0.0.0')
-
-def getHeightDeltas(heights):
-    deltas = []
-    heights_len = len(heights)
-    for i in range(0, heights_len-1)
-        deltas[i] =  (heights[i-1] - heights[i])/heights(i)
-    print deltas
-    return deltas

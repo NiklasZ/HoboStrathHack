@@ -21,13 +21,13 @@
     <script type="text/javascript" src="static/js/app.js"></script>
   </head>
   <body>
-    <div class="container" style="width: 1506px; height: 800px;">
+    <div class="container" id="viewport">
       <div class="row">
         <div class="overlay">
           <form id="checkout" method="post" action="/checkout">
             <h2>Rotten luck! Maybe investing in some stocks might save you next time...</h2>
             <div id="dropin"></div>
-            <input type="submit" value="Pay $10"/>
+            <input id="pay" type="submit" value="Pay $10"/>
           </form>
         </div>
         <div class="info-board">
@@ -37,6 +37,9 @@
             </div>
             <div class="col-md-3">
               <p>Distance: 0 m</p>
+            </div>
+            <div class="col-md-1 pull-right">
+              <strong class="money">{{paid}}</strong>
             </div>
           </div>
         </div>

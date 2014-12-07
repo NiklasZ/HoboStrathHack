@@ -4,13 +4,22 @@ app = {
     height: 770,
     cursor: null,
     score: 0,
-    competitors: {}
+    competitors: {},
+    active_segment: 0,
+    explosion_sound: null
 };
 
 $(function(){
     $('.info-board').hide();
     $("#start").click(init);
 
+    app.width = $(window).width() - 100;
+    //app.height = $(window).height() - 100;
+
+    $('#viewport').width(app.width);
+    $('.info-board').width(app.width + 6);
+    $('#viewport').height(app.height);
+    
     if(document.domain){
         app.online = true;
 
@@ -46,7 +55,7 @@ function init() {
     $('.overlay').overlay();
 
        
-    app.game = new Phaser.Game(app.width, app.height, Phaser.CANVAS, 'gameDiv', { preload: preload, create: create, update: update });
+    app.game = new Phaser.Game(app.width, app.height, Phaser.CANVAS, 'gameDiv', { preload: preload, create: create, update: update, render: render });
 }
 
 function preload() {
@@ -58,6 +67,8 @@ function preload() {
     app.game.load.image('moto', 'static/assets/moto1Pimp1.png');
     app.game.load.image('wheel', 'static/assets/wheel1Pimp.png');
     app.game.load.physics('motophysics','static/assets/moto.json');
+
+    app.game.load.audio('ambient','static/assets/explosion.ogg');
 }
 
 function create() {
@@ -68,6 +79,7 @@ function create() {
     
     app.game.stage.backgroundColor = '#DDDDDD';
     
+
     
     // setting gravity
     app.game.physics.p2.gravity.y = 1500;
@@ -104,6 +116,16 @@ function update() {
     if (app.spaceKey.isDown) {
         app.player.accelerate_car(0);
     }
+
+    
+    app.ground.updateSegments();
+    for (var i = 0; i < app.ground.segments.length; i++) {
+        if(app.player.car.body.x >= app.ground.segments[i].x && app.player.car.body.x <=  app.ground.segments[i].x+100){
+            app.active_segment = app.ground.segments[i].raw_value;
+            //console.log(app.ground.segments[i].raw_value);
+            break;
+        }
+    };
 
     $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
     if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
@@ -146,9 +168,12 @@ function show_competitors(data) {
 function explosion() {
     console.log("you exlode");
     var anim=app.game.add.sprite(app.player.car.body.x-60, app.player.car.body.y-90, 'boom');
+    var explosion_sound = app.game.add.audio('ambient', 1, false);
 
     anim.animations.add('explode');
     anim.animations.play('explode',60,false);
+    
+    explosion_sound.play('',0,1,false);
 
     setTimeout(function(){
         app.player.car.wheel_front.destroy();
@@ -159,7 +184,12 @@ function explosion() {
     
 
 }
-
 function drawAxes(){
     
+}
+
+function render () {
+
+    app.game.debug.text('Historical stock price: ' + app.active_segment.toFixed(2), 100, 132, "#666699","16px Verdana");
+
 }

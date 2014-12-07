@@ -1,7 +1,6 @@
-header {
-	padding-top: 40px;
-}
-body { background: #E9E9E9; }
+
+body { padding-top: 60px;
+	background: #E9E9E9; }
 
 
 .info-board{
@@ -26,6 +25,11 @@ body { background: #E9E9E9; }
 	font-size: 19px;
 	padding-left: 50px;
 	padding-right: 50px;
+}
+
+strong.money{
+	color: #FFF;
+	font-size: 18pt;
 }
 
 #info div:first-child{

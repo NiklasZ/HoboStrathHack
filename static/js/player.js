@@ -1,9 +1,9 @@
 Player = function(game) {
 
 	var car = {
-		body: game.add.sprite(200, 100,'moto'),
-		wheel_front: game.add.sprite(250, 130,'wheel'),
-		wheel_back: game.add.sprite(150, 130,'wheel'),
+		body: game.add.sprite(200, 300,'moto'),
+		wheel_front: game.add.sprite(250, 330,'wheel'),
+		wheel_back: game.add.sprite(150, 330,'wheel'),
 		collision_group: game.physics.p2.createCollisionGroup()
 	};
     
