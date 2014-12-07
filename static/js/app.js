@@ -5,7 +5,8 @@ app = {
     cursor: null,
     score: 0,
     competitors: {},
-    active_segment: 0
+    active_segment: 0,
+    explosion_sound: null
 };
 
 $(function(){
@@ -64,6 +65,8 @@ function preload() {
     app.game.load.image('moto', 'static/assets/moto2.png');
     app.game.load.image('wheel', 'static/assets/wheel1.png');
     app.game.load.physics('motophysics','static/assets/moto.json');
+
+    app.game.load.audio('ambient','static/assets/explosion.ogg');
 }
 
 function create() {
@@ -74,6 +77,7 @@ function create() {
     
     app.game.stage.backgroundColor = '#DDDDDD';
     
+
     
     // setting gravity
     app.game.physics.p2.gravity.y = 1500;
@@ -162,9 +166,12 @@ function show_competitors(data) {
 function explosion() {
     console.log("you exlode");
     var anim=app.game.add.sprite(app.player.car.body.x-60, app.player.car.body.y-90, 'boom');
+    var explosion_sound = app.game.add.audio('ambient', 1, false);
 
     anim.animations.add('explode');
     anim.animations.play('explode',60,false);
+    
+    explosion_sound.play('',0,1,false);
 
     setTimeout(function(){
         app.player.car.wheel_front.destroy();
