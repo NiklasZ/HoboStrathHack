@@ -49,7 +49,7 @@ Ground = function(game) {
 	        ];
     	},
 
-    	addSegment: function(position, height) {
+    	addSegment: function(position, height, raw) {
     		var segmentShape = this.getPolygon(this.last_height, height, position);
     		this.last_height = height;
 
@@ -73,6 +73,8 @@ Ground = function(game) {
 
     		//game.physics.p2.updateBoundsCollisionGroup();
 		    
+            segment.raw_value = raw;
+
 		    this.segments.push(segment);
             this.last_position = position + this.SEGMENT_LENGTH;
     	}

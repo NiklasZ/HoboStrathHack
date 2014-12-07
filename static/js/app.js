@@ -21,7 +21,7 @@ $(function(){
 
         app.socket.on('data', function(msg) {
             console.log('Got data for ', msg);
-            app.ground.addSegment(msg.pos * app.ground.SEGMENT_LENGTH, msg.height);
+            app.ground.addSegment(msg.pos * app.ground.SEGMENT_LENGTH, msg.height, msg.raw);
         });
 
         app.socket.on('broadcast_positions', function(msg) {
@@ -51,8 +51,12 @@ function init() {
 
 function preload() {
     app.game.load.spritesheet('boom', 'static/assets/explosion.hasgraphics.png', 100, 100, 75);
-    app.game.load.image('moto', 'static/assets/moto.png');
-    app.game.load.image('wheel', 'static/assets/wheel.png');
+
+    app.game.load.image('moto_black', 'static/assets/moto.png');
+    app.game.load.image('wheel_black', 'static/assets/wheel.png');
+
+    app.game.load.image('moto', 'static/assets/moto2.png');
+    app.game.load.image('wheel', 'static/assets/wheel1.png');
     app.game.load.physics('motophysics','static/assets/moto.json');
 }
 
@@ -78,6 +82,8 @@ function create() {
     app.game.camera.follow(app.player.car.body);
 
     app._competitors = app.game.add.group();
+    app._competitors.z = -99;
+    app._competitors.updateZ();
 }
 
 function update() {

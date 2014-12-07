@@ -65,9 +65,10 @@ body { background: #E9E9E9; }
 
 #help{
 	visibility: hidden;
-	background-color: #A678B2;
-	border-color: #A678B2;
 
 }
 
-
+#dropin {
+	width: 50%;
+	margin: 0 auto;
+}
