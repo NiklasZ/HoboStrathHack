@@ -1,6 +1,6 @@
 Ground = function(game, heights) {
     var obj = {
-    	HEIGHTS: [100,120,60,30,60,56,70,120],
+    	HEIGHTS: [100,120,60,30,60,56,70,120,60,70,230, 23],
     	SEGMENT_LENGTH: 100,
     	THICKNESS: 20,
 

@@ -74,13 +74,20 @@ function generatePoint(){
 }
 
 function updateGround(){
-    if(app.player.car.body.x > app.width/2){
+    if(app.ground.last_position - app.player.car.body.x < 1000){
         app.ground.HEIGHTS.push(generatePoint());
         app.ground.addSegments();
+        
     }
-    for (var i = 0; i < app.ground.segments.length; i++) {
-        if(app.player.car.body.x - app.ground.segments[i].x > 1000){
-            app.ground.segments[i].destroy();
-        }
-    };
+    else if( app.player.car.body.x - app.ground.segments[0].x > 1000){
+        app.ground.segments[0].destroy();
+        app.ground.segments.shift();
+    }
+    //console.log(app.ground.segments.length);
+    /*if(app.ground.segments.length>50){
+        console.log("I AM DESTRYOING YOUR MAMMA", app.ground.segments[0].x);
+        app.ground.segments[0].destroy();
+        app.ground.segments.shift();
+    }*/
+
 }

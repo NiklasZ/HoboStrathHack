@@ -10,11 +10,13 @@ Player = function(game) {
     
     game.physics.p2.enable([car.wheel_front, car.wheel_back, car.body]);
 
+   
     car.body.body.debug = false;
     car.body.body.mass = 1;
-    car.body.body.setCollisionGroup(car.collision_group);
     car.body.body.clearShapes();
+    //car.body.body.setRectangle(100,40);
     car.body.body.loadPolygon('motophysics','moto');
+    car.body.body.setCollisionGroup(car.collision_group);
 
     car.wheel_front.body.setCircle(20);
     car.wheel_front.body.debug = false;
@@ -22,7 +24,7 @@ Player = function(game) {
     car.wheel_front.body.setCollisionGroup(car.collision_group);
 
     car.wheel_back.body.setCircle(20);
-    car.wheel_back.body.debug = true;
+    car.wheel_back.body.debug = false;
     car.wheel_back.body.mass = 4;
     car.wheel_back.body.setCollisionGroup(car.collision_group);
 
