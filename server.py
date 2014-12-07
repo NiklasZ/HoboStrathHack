@@ -4,7 +4,7 @@ monkey.patch_all()
 import time
 import random
 from threading import Thread
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, jsonify
 from flask.ext.socketio import SocketIO, emit, join_room, leave_room, session
 from flask.ext.cors import CORS, cross_origin
 from player import Player
@@ -39,6 +39,12 @@ def index():
         get_player(session['sid'])
 
     return render_template('index.html')
+
+@app.route('/data')
+def get_data():
+    initData()
+    msg = makeHistoricalRequest('Allianz SE', 'apiRequests/dax.csv', 'PX_MID', '20140101', '20140801', 'DAILY')
+    return jsonify(**{'data': msg})
 
 @socketio.on('connect', namespace='/race')
 def client_connect():
