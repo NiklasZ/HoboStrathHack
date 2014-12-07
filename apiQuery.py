@@ -217,7 +217,6 @@ def makeHistoricalRequest(name, index, priceField, startDate, finishDate, freque
     finally:
         # Stop the session
         session.stop()
-        print valueList
     return valueList
 
 if __name__ == "__main__":

@@ -45,9 +45,9 @@ def client_connect():
     print(get_player(session['sid']).sid)
 
     initData()
-    print makeHistoricalRequest('Allianz SE', 'PX_MID', '20140101', '20140801', 'DAILY')
+    msg = makeHistoricalRequest('Allianz SE', 'apiRequests/dax.csv', 'PX_MID', '20140101', '20140801', 'DAILY')
 
-    emit('start','test')
+    emit('data', msg)
 
 def get_player(sid):
     if not sid in players:
