@@ -9,9 +9,8 @@ body { padding-top: 60px;
 	background-color: #666699;
 	border-top-right-radius: 15px;
 	border-top-left-radius: 15px;
-	width: 1506px;
 	height: 70px;
-
+	z-index: 2;
 }
 
 #info{
