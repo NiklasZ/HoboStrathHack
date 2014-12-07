@@ -80,7 +80,7 @@ Ground = function(game) {
             this.gridLines.push(graphics);
         },
 
-    	addSegment: function(position, height) {
+    	addSegment: function(position, height, raw) {
     		var segmentShape = this.getPolygon(this.last_height, height, position);
     		this.last_height = height;
 
@@ -102,6 +102,8 @@ Ground = function(game) {
 		    contactMaterial.friction = 3;     // Friction to use in the contact of these two materials.
 
     		//game.physics.p2.updateBoundsCollisionGroup();
+		    
+            segment.raw_value = raw;
 		    this.segments.push(segment);
             this.last_position = position + this.SEGMENT_LENGTH;
             this.drawPoly(segmentShape);
