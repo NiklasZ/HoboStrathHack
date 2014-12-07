@@ -4,7 +4,8 @@ app = {
     height: 770,
     cursor: null,
     score: 0,
-    competitors: {}
+    competitors: {},
+    active_segment: 0
 };
 
 $(function(){
@@ -21,7 +22,7 @@ $(function(){
 
         app.socket.on('data', function(msg) {
             console.log('Got data for ', msg);
-            app.ground.addSegment(msg.pos * app.ground.SEGMENT_LENGTH, msg.height);
+            app.ground.addSegment(msg.pos * app.ground.SEGMENT_LENGTH, msg.height, msg.raw);
         });
 
         app.socket.on('broadcast_positions', function(msg) {
@@ -46,11 +47,15 @@ function init() {
     $('.overlay').overlay();
 
        
-    app.game = new Phaser.Game(app.width, app.height, Phaser.AUTO, 'gameDiv', { preload: preload, create: create, update: update });
+    app.game = new Phaser.Game(app.width, app.height, Phaser.CANVAS, 'gameDiv', { preload: preload, create: create, update: update, render: render });
 }
 
 function preload() {
     app.game.load.spritesheet('boom', 'static/assets/explosion.hasgraphics.png', 100, 100, 75);
+
+    app.game.load.image('moto_black', 'static/assets/moto.png');
+    app.game.load.image('wheel_black', 'static/assets/wheel.png');
+
     app.game.load.image('moto', 'static/assets/moto2.png');
     app.game.load.image('wheel', 'static/assets/wheel1.png');
     app.game.load.physics('motophysics','static/assets/moto.json');
@@ -78,6 +83,8 @@ function create() {
     app.game.camera.follow(app.player.car.body);
 
     app._competitors = app.game.add.group();
+    app._competitors.z = -99;
+    app._competitors.updateZ();
 }
 
 function update() {
@@ -91,7 +98,15 @@ function update() {
         app.player.accelerate_car(0);
     }
 
+    
     app.ground.updateSegments();
+    for (var i = 0; i < app.ground.segments.length; i++) {
+        if(app.player.car.body.x >= app.ground.segments[i].x && app.player.car.body.x <=  app.ground.segments[i].x+100){
+            app.active_segment = app.ground.segments[i].raw_value;
+            //console.log(app.ground.segments[i].raw_value);
+            break;
+        }
+    };
 
     $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
     if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
@@ -126,5 +141,11 @@ function explosion() {
         $("#help").click();
     },600);
     
+
+}
+
+function render () {
+
+    app.game.debug.text('Historical stock price: ' + app.active_segment.toFixed(2), 100, 132, "#666699","16px Verdana");
 
 }

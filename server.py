@@ -9,6 +9,7 @@ from flask.ext.socketio import SocketIO, emit, join_room, leave_room, session
 from flask.ext.cors import CORS, cross_origin
 from player import Player
 from apiQuery import specialAndyRequestRequest, initData
+import braintree
 
 app = Flask(__name__)
 app.debug = True
@@ -20,6 +21,13 @@ players = dict()
 heights = list()
 stock_name = ''
 normalized_heights = list()
+
+braintree.Configuration.configure(
+    braintree.Environment.Sandbox,
+    'pq77ngc6dhk8xjf4',
+    'khy9f8d7jjcs2fpv',
+    'd200a4b497ce72eb5e3a0089bdb5f208'
+)
 
 def background_thread():
     while True:
@@ -39,7 +47,15 @@ def index():
         session['sid'] = int(random.random()*1000000)
         get_player(session['sid'])
 
-    return render_template('index.html')
+    return render_template('index.html', client_token = braintree.ClientToken.generate()) 
+
+@app.route("/purchases", methods=["POST"])
+def create_purchase():
+    nonce = request.form["payment_method_nonce"]
+    print braintree.Transaction.sale({
+        "amount": "10.00",
+        "payment_method_nonce": "nonce-from-the-client"
+    })
 
 @socketio.on('connect', namespace='/race')
 def client_connect():
@@ -52,9 +68,11 @@ def client_connect():
 def get_height(msg):
     if msg < len(normalized_heights):
         height = normalized_heights[msg]
+        raw_height = heights[msg]
     else:
         height = 0
-    emit('data', {"height": height, "pos": msg})
+        raw_height = 0
+    emit('data', {"height": height, "pos": msg, "raw": raw_height})
 
 @socketio.on('send_position', namespace='/race')
 def send_position(msg):

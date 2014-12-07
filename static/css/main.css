@@ -68,4 +68,7 @@ body { background: #E9E9E9; }
 
 }
 
-
+#dropin {
+	width: 50%;
+	margin: 0 auto;
+}

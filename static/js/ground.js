@@ -9,6 +9,7 @@ Ground = function(game) {
     	last_height: 0,
         last_position: 0,
         emmited: -1,
+        active_segment: null,
 
     	segments: [],
         collision_group: game.physics.p2.createCollisionGroup(),
@@ -22,7 +23,7 @@ Ground = function(game) {
             var position = this.last_position;
             while(position - app.player.car.body.x < 1000){
                 if(!app.online){
-                    this.addSegment(position, this.getHeight(position));
+                    this.addSegment(position, this.getHeight(position),this.getHeight(position));
                 }else{
                     var i = position / this.SEGMENT_LENGTH;
                     if(this.emmited < i){
@@ -37,6 +38,7 @@ Ground = function(game) {
                 this.segments[0].destroy();
                 this.segments.shift();
             }
+
         },
 
     	getPolygon: function(last_height, height, position) {
@@ -49,7 +51,7 @@ Ground = function(game) {
 	        ];
     	},
 
-    	addSegment: function(position, height) {
+    	addSegment: function(position, height, raw) {
     		var segmentShape = this.getPolygon(this.last_height, height, position);
     		this.last_height = height;
 
@@ -73,6 +75,9 @@ Ground = function(game) {
 
     		//game.physics.p2.updateBoundsCollisionGroup();
 		    
+            segment.raw_value = raw;
+            //console.log(segment.body.x);
+
 		    this.segments.push(segment);
             this.last_position = position + this.SEGMENT_LENGTH;
     	}

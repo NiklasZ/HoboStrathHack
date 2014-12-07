@@ -1,9 +1,9 @@
 Competitor = function(group) {
 
 	var car = {
-		body: group.create(200, 400, 'moto'),
-        wheel_front: group.create(250, 430,'wheel'),
-        wheel_back: group.create(150, 430,'wheel')
+		body: group.create(200, 400, 'moto_black'),
+        wheel_front: group.create(250, 430,'wheel_black'),
+        wheel_back: group.create(150, 430,'wheel_black')
 	};
     car.body.anchor.setTo(0.5, 0.5);
     car.wheel_front.anchor.setTo(0.5, 0.5);
