@@ -40,12 +40,6 @@ def index():
 
     return render_template('index.html')
 
-@app.route('/data')
-def get_data():
-    initData()
-    msg = makeHistoricalRequest('Allianz SE', 'apiRequests/dax.csv', 'PX_MID', '20140101', '20140801', 'DAILY')
-    return jsonify(**{'data': msg})
-
 @socketio.on('connect', namespace='/race')
 def client_connect():
     print(get_player(session['sid']).sid)
