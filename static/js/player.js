@@ -9,7 +9,6 @@ Player = function(game) {
     
     
     game.physics.p2.enable([car.wheel_front, car.wheel_back, car.body]);
-
    
     car.body.body.debug = false;
     car.body.body.mass = 1;

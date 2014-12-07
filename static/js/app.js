@@ -6,23 +6,21 @@ app = {
 };
 
 $(function(){
-    $('.start-menu').hide();
     $("#start").click(init);
 
     if(document.domain){
+        app.online = true;
+
         app.socket = io.connect('http://'+ document.domain +':5000/race');
         app.socket.on('connect', function() {
             console.log('Connected to the server');
         });
 
         app.socket.on('data', function(msg) {
-            app.heights = msg;
-            $('.start-menu').show();
+            console.log('Got data for ', msg);
+            app.ground.addSegment(msg.pos * app.ground.SEGMENT_LENGTH, msg.height);
         }); 
-    }else{
-        app.heights = sample_data['Allianz SE 2014'];
-        $('.start-menu').show();      
-    }       
+    }  
 });
 
 function init() {
@@ -52,8 +50,9 @@ function create() {
     
     app.arrows = app.game.input.keyboard.createCursorKeys();
     
+    app.ground = new Ground(app.game);
     app.player = new Player(app.game);
-    app.ground = new Ground(app.game, app.heights); 
+    app.ground.updateSegments(); 
     app.game.camera.follow(app.player.car.body);   
 }
 
@@ -64,30 +63,6 @@ function update() {
     if (app.arrows.right.isDown) {
         app.player.accelerate_car(4);
     }
-    updateGround();
-}
 
-function generatePoint(){
-    var max = 120, min = -30;
-    return randHeight = Math.random()*(max - min) + min;
-
-}
-
-function updateGround(){
-    if(app.ground.last_position - app.player.car.body.x < 1000){
-        app.ground.HEIGHTS.push(generatePoint());
-        app.ground.addSegments();
-        
-    }
-    else if( app.player.car.body.x - app.ground.segments[0].x > 1000){
-        app.ground.segments[0].destroy();
-        app.ground.segments.shift();
-    }
-    //console.log(app.ground.segments.length);
-    /*if(app.ground.segments.length>50){
-        console.log("I AM DESTRYOING YOUR MAMMA", app.ground.segments[0].x);
-        app.ground.segments[0].destroy();
-        app.ground.segments.shift();
-    }*/
-
+    app.ground.updateSegments();
 }

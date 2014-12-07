@@ -17,9 +17,10 @@ socketio = SocketIO(app)
 cors = CORS(app)
 thread = None
 players = dict()
+heights = list()
+normalized_heights = list()
 
 def background_thread():
-    """Example of how to send server generated events to clients."""
     while True:
         time.sleep(10)
         #count += 1
@@ -28,12 +29,11 @@ def background_thread():
         #              namespace='/test')
 
 @app.route('/')
-def index():
+def index():  
     global thread
     if thread is None:
         thread = Thread(target=background_thread)
-        thread.start()
-
+        thread.start() 
     if not 'sid' in session:
         session['sid'] = int(random.random()*1000000)
         get_player(session['sid'])
@@ -44,15 +44,34 @@ def index():
 def client_connect():
     print(get_player(session['sid']).sid)
 
-    initData()
-    msg = makeHistoricalRequest('Allianz SE', 'apiRequests/dax.csv', 'PX_MID', '20140101', '20140801', 'DAILY')
-
-    emit('data', msg)
+@socketio.on('get_height', namespace='/race')
+def get_height(msg):
+    if msg < len(normalized_heights):
+        height = normalized_heights[msg]
+    else:
+        height = 0
+    emit('data', {"height": height, "pos": msg})
 
 def get_player(sid):
     if not sid in players:
         players[sid] = Player(sid)
     return players[sid]    
 
+def normalize_heights():
+    global normalized_heights
+
+    min = 10000
+    max = 0
+    for height in heights:
+        if height < min:
+            min = height
+        if height > max:
+            max = height
+    normalized_heights = map(lambda h:(h-min)*(500.0/(max-min))-100, heights)
+
 if __name__ == '__main__':
+    initData()
+    heights = makeHistoricalRequest('Allianz SE', 'apiRequests/dax.csv', 'PX_MID', '20140101', '20140801', 'DAILY')
+    normalize_heights()
+    print 'Loaded data from the API'
     socketio.run(app, host='0.0.0.0')

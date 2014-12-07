@@ -216,7 +216,7 @@ def makeHistoricalRequest(name, index, priceField, startDate, finishDate, freque
             counter = counter + 1
     finally:
         # Stop the session
-        print valueList
+        # print valueList
         session.stop()
     return valueList
 
