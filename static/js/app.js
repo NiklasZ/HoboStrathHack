@@ -51,6 +51,7 @@ function create() {
     app.game.physics.p2.friction = 15;
     
     app.arrows = app.game.input.keyboard.createCursorKeys();
+    app.spaceKey = app.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     
     app.player = new Player(app.game);
     app.ground = new Ground(app.game, app.heights); 
@@ -63,6 +64,9 @@ function update() {
     }
     if (app.arrows.right.isDown) {
         app.player.accelerate_car(4);
+    }
+    if (app.spaceKey.isDown) {
+        app.player.accelerate_car(0);
     }
     updateGround();
 }
