@@ -71,6 +71,7 @@ function preload() {
     app.game.load.physics('motophysics','static/assets/moto.json');
 
     app.game.load.audio('ambient','static/assets/explosion.ogg');
+    app.game.load.audio('theme','static/assets/theme.ogg');
 }
 
 function create() {
@@ -100,6 +101,10 @@ function create() {
     for (i=0; i<2*app.game.height; i += 100) {
         addHorizontalLines(i);
     }
+
+    app.explosion_sound = app.game.add.audio('ambient', 1, false);
+    app.theme_sound = app.game.add.audio('theme', 1, true);
+    app.theme_sound.play('',0,1,true);
 
     //app.stockChangeText = app.game.add.text(app.player.car.body.body.x+150, 150, "suuuper bonus!", { font: "30px Arial", fill: "#ff0044", align: "center" });
     //app.stockChangeText.anchor.setTo(0.5, 0.5);
@@ -170,12 +175,10 @@ function show_competitors(data) {
 function explosion() {
     console.log("you exlode");
     var anim=app.game.add.sprite(app.player.car.body.x-60, app.player.car.body.y-90, 'boom');
-    var explosion_sound = app.game.add.audio('ambient', 1, false);
-
     anim.animations.add('explode');
     anim.animations.play('explode',60,false);
-    
-    explosion_sound.play('',0,1,false);
+    app.theme_sound.stop();
+    app.explosion_sound.play('',0,1,false);
 
     setTimeout(function(){
         app.player.car.wheel_front.destroy();
