@@ -100,3 +100,7 @@ function show_competitors(data) {
         }
     }
 }
+
+function explosion() {
+    window.alert("you exlode");
+}

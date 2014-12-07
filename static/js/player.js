@@ -9,6 +9,7 @@ Player = function(game) {
     
     
     game.physics.p2.enable([car.wheel_front, car.wheel_back, car.body]);
+
    
     car.body.body.debug = false;
     car.body.body.mass = 1;
@@ -46,11 +47,19 @@ Player = function(game) {
 
     game.physics.p2.updateBoundsCollisionGroup();
 
+    crush_trigger = function() {
+        var ang = this.car.body.body.angle;
+        if ((ang <= 180 && ang >= 120) || (ang >= -180 && ang <= -120)) {
+            explosion();
+        }
+    }
+
 	return {
 		car: car,
 		game: game,
 
 		accelerate_car: function(a) {
+            this.car.body.body.onEndContact.add(crush_trigger,this);
             var angVel = this.car.wheel_back.body.angularVelocity;
             if (a == 0) {   // braking
                 this.car.wheel_front.body.angularVelocity = 0;
@@ -61,6 +70,8 @@ Player = function(game) {
      		}*/else{
                 if (Math.abs(angVel) < 80) {
      			    this.car.wheel_back.body.angularVelocity += a*7;
+                } else {
+                    this.car.body.body.angularVelocity -= a/4;
                 }
      		}
 		},
