@@ -72,6 +72,11 @@ function update() {
      $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
      if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
 
+    app.player.car.body.body.onBeginContact.add(youDiedBitch, this);
+
+}
+function youDiedBitch(){
+    console.log("You be dead, mon");
 }
 
 function generatePoint(){
