@@ -15,21 +15,21 @@
     <script type="text/javascript" src="static/js/phaser.js"></script>
     <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+    <script type="text/javascript" src="static/js/competitor.js"></script>
     <script type="text/javascript" src="static/js/player.js"></script>
     <script type="text/javascript" src="static/js/ground.js"></script>
     <script type="text/javascript" src="static/js/app.js"></script>
   </head>
   <body>
-    <header class="text-center">
-      <div class="container" style="width: 1506px; height: 800px;">
-        <div class="row">
-          <div class="overlay">
-            <form id="checkout" method="post" action="/checkout">
-              <div id="dropin"></div>
-              <input type="submit" value="Pay $10">
-            </form>
-          </div>
-            <div class="info-board">
+    <div class="container" style="width: 1506px; height: 800px;">
+      <div class="row">
+        <div class="overlay">
+          <form id="checkout" method="post" action="/checkout">
+            <div id="dropin"></div>
+            <input type="submit" value="Pay $10"/>
+          </form>
+        </div>
+          <div class="info-board">
             <div class="row" id="info">
               <div class="col-md-3">
                 <p>Current track: Random</p>
@@ -38,20 +38,22 @@
                 <p>Distance: 0 m</p>
               </div>
             </div>
+          </div>
+          <div class="start-menu">
+            <div class="text">
+                <h2>Welcome to Moto Moto Moto.</h2>
+                <p>Ride your sweet bike on those indices.</p>
+                <a class="btn btn-primary btn-lg">Track:</a>
+                <a class="btn btn-success btn-lg" id="start">Start game!</a>
             </div>
-            <div class="start-menu">
-              <div class="text">
-                  <h2>Welcome to Moto Moto Moto.</h2>
-                  <p>Ride your sweet bike on those indices.</p>
-                  <a class="btn btn-primary btn-lg">Track:</a>
-                  <a class="btn btn-success btn-lg" id="start">Start game!</a>
-              </div>
-            </div>
+          </div>
           <div id="gameDiv"></div>
         </div>
       </div>
-    <a data-overlay-trigger href="#!">
-      <button class="btn btn-primary btn-lg" id="help">Help</button>
-    </a>
+    <div class="text-center">  
+      <a data-overlay-trigger href="#!">
+        <button class="btn btn-primary btn-lg" id="help">Help</button>
+      </a>
+    </div>
    </body>
 </html>
