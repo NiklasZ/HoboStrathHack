@@ -22,7 +22,7 @@ Player = function(game) {
     car.wheel_front.body.setCollisionGroup(car.collision_group);
 
     car.wheel_back.body.setCircle(20);
-    car.wheel_back.body.debug = false;
+    car.wheel_back.body.debug = true;
     car.wheel_back.body.mass = 4;
     car.wheel_back.body.setCollisionGroup(car.collision_group);
 
@@ -50,10 +50,11 @@ Player = function(game) {
 		game: game,
 
 		accelerate_car: function(a) {
-     		if(this.car.wheel_back.body.angularVelocity < 0 && a > 0 || this.car.wheel_back.body.angularVelocity > 0 && a < 0){
+            var angVel = this.car.wheel_back.body.angularVelocity;
+     		if(angVel < 0 && a > 0 || angVel > 0 && a < 0){
      			this.car.wheel_back.body.angularVelocity += a*3; // braking
      		}else{
-     			this.car.wheel_back.body.angularVelocity += a;
+     			this.car.wheel_back.body.angularVelocity += a*(1 + 10/(angVel+1));
      		}
 		},
 

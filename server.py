@@ -4,14 +4,17 @@ monkey.patch_all()
 import time
 import random
 from threading import Thread
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, jsonify
 from flask.ext.socketio import SocketIO, emit, join_room, leave_room, session
+from flask.ext.cors import CORS, cross_origin
 from player import Player
+from apiQuery import makeHistoricalRequest, initData
 
 app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
+cors = CORS(app)
 thread = None
 players = dict()
 
@@ -23,7 +26,6 @@ def background_thread():
         #socketio.emit('my response',
         #              {'data': 'Server generated event', 'count': count},
         #              namespace='/test')
-
 
 @app.route('/')
 def index():
@@ -38,10 +40,20 @@ def index():
 
     return render_template('index.html')
 
+@app.route('/data')
+def get_data():
+    initData()
+    msg = makeHistoricalRequest('Allianz SE', 'apiRequests/dax.csv', 'PX_MID', '20140101', '20140801', 'DAILY')
+    return jsonify(**{'data': msg})
+
 @socketio.on('connect', namespace='/race')
 def client_connect():
     print(get_player(session['sid']).sid)
-    emit('start','test')
+
+    initData()
+    msg = makeHistoricalRequest('Allianz SE', 'apiRequests/dax.csv', 'PX_MID', '20140101', '20140801', 'DAILY')
+
+    emit('data', msg)
 
 def get_player(sid):
     if not sid in players:
