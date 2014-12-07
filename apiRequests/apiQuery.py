@@ -17,6 +17,7 @@ spx500TickerList = []
 spx500NameList = []
 
 stockFieldList = ["PX_MID","PX_LAST","PX_OPEN","PX_LOW","PX_HIGH","PX_VOLUME"]
+intraBarRequestFieldList = ["TRADE","BEST","ASK","BEST_BID","BEST_ASK"]
 
 dataCapPerRequest = 10000
 serverIP = '10.8.8.1'
@@ -47,7 +48,7 @@ def makeHistoryRequest(name, price, startDate, finishDate, frequency, session):
     request.getElement("securities").appendValue(name)
     request.getElement("fields").appendValue(price)
 
-    request.set("periodicityAdjustment", "ACTUAL")
+    request.set("security", name)
     request.set("periodicitySelection",frequency)
     request.set("startDate", startDate)
     request.set("endDate", finishDate)
@@ -59,9 +60,7 @@ def makeHistoryRequest(name, price, startDate, finishDate, frequency, session):
 def makeIntraRequest(name, price, startDate, finishDate, frequency, session):
 
     refDataService = session.getService("//blp/refdata")
-    request = refDataService.createRequest("HistoricalDataRequest")
-    request.getElement("securities").appendValue(name)
-    request.getElement("fields").appendValue(price)
+    request = refDataService.createRequest("IntradayBarRequest")
 
     request.set("periodicityAdjustment", "ACTUAL")
     request.set("periodicitySelection",frequency)
@@ -76,7 +75,7 @@ def main():
     initData()
     #makeHistoricalRequest("GKN LN Equity",daxFileName,"PX_MID","20120101", "20121231", "MONTHLY")
     #readInStocks('dax.csv', daxTickerList, daxNameList)
-    makeRandomHistoricalRequest(daxFileName,"20120101", "20121231", "MONTHLY")
+    #makeRandomHistoricalRequest(daxFileName,"20120101", "20121231", "MONTHLY")
 
 #Getters
 def getStockNameList(name):
@@ -219,7 +218,7 @@ def makeHistoricalRequest(name, index, priceField, startDate, finishDate, freque
     finally:
         # Stop the session
         session.stop()
-        print valueList
+        #print valueList
     return valueList
 
 if __name__ == "__main__":
