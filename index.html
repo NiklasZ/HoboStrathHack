@@ -21,35 +21,36 @@
     <script type="text/javascript" src="static/js/app.js"></script>
   </head>
   <body>
-    <div class="container" id="viewport">
+    <div class="container" style="width: 1506px; height: 800px;">
       <div class="row">
         <div class="overlay">
           <form id="checkout" method="post" action="/checkout">
             <h2>Rotten luck! Maybe investing in some stocks might save you next time...</h2>
             <div id="dropin"></div>
-            <input id="pay" type="submit" value="Pay $10"/>
+            <input type="submit" value="Pay $10"/>
           </form>
         </div>
-        <div class="info-board">
-          <div class="row" id="info">
-            <div class="col-md-3">
-              <p>Current track: Random</p>
-            </div>
-            <div class="col-md-3">
-              <p>Distance: 0 m</p>
+          <div class="info-board">
+            <div class="row" id="info">
+              <div class="col-md-3">
+                <p>Current track: Random</p>
+              </div>
+              <div class="col-md-3">
+                <p>Distance: 0 m</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="start-menu">
-          <div class="text">
-              <h2>Welcome to Moto Moto Moto.</h2>
-              <p>Ride your sweet bike on those indices.</p>
-              <a class="btn btn-success btn-lg" id="start">Start game!</a>
+          <div class="start-menu">
+            <div class="text">
+                <h2>Welcome to Moto Moto Moto.</h2>
+                <p>Ride your sweet bike on a track made of stock price data. Compete to be the fastest... or the most influential businessman.</p><br/>
+                <p>Use the left and right arrow keys to move and the Space bar for emergency braking!</p>
+                <a class="btn btn-success btn-lg" id="start">Start game!</a>
+            </div>
           </div>
+          <div id="gameDiv"></div>
         </div>
-        <div id="gameDiv"></div>
       </div>
-    </div>
     <div class="text-center">  
       <a data-overlay-trigger href="#!">
         <button class="btn btn-primary btn-lg" id="help">Help</button>
