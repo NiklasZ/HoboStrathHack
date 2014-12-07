@@ -23,8 +23,8 @@ Ground = function(game) {
         updateSegments: function() {
             var position = this.last_position;
             while(position - app.player.car.body.x < 1000){
+                this.addLine(position);
                 if(!app.online){
-                    this.addLine(position);
                     this.addSegment(position, this.getHeight(position));
                 }else{
                     var i = position / this.SEGMENT_LENGTH;
