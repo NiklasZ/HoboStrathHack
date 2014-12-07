@@ -1,6 +1,5 @@
-Ground = function(game, heights) {
+Ground = function(game) {
     var obj = {
-    	HEIGHTS: [100,120,60,30,60,56,70,120,60,70,230, 23],
     	SEGMENT_LENGTH: 100,
     	THICKNESS: 20,
 
@@ -9,30 +8,49 @@ Ground = function(game, heights) {
     	_ground: game.add.group(),
     	last_height: 0,
         last_position: 0,
+        emmited: -1,
 
     	segments: [],
         collision_group: game.physics.p2.createCollisionGroup(),
 
-    	addSegments: function() {
-    		while(this.HEIGHTS.length){
-    			this.addSegment(this.last_position);
-    			this.last_position += this.SEGMENT_LENGTH;
-    		}
-    	},
+        getHeight: function(pos) {
+            var max = 120, min = -30;
+            return Math.random()*(max - min) + min;    
+        },
 
-    	getPolygon: function(last_height, height, last_position) {
+        updateSegments: function() {
+            var position = this.last_position;
+            while(position - app.player.car.body.x < 1000){
+                if(!app.online){
+                    this.addSegment(position, this.getHeight(position));
+                }else{
+                    var i = position / this.SEGMENT_LENGTH;
+                    if(this.emmited < i){
+                        console.log('Emitting get_height with', i);
+                        this.emmited = i;
+                        app.socket.emit('get_height', i);
+                    }
+                }
+                position += this.SEGMENT_LENGTH;
+            }
+            if( this.segments[0] && app.player.car.body.x - this.segments[0].x > 1000){
+                this.segments[0].destroy();
+                this.segments.shift();
+            }
+        },
+
+    	getPolygon: function(last_height, height, position) {
     		var h = app.height;
 		    return [
-		    	[this.last_position, h - last_height + this.THICKNESS],
-	        	[this.last_position + this.SEGMENT_LENGTH, h - height + this.THICKNESS],
-	            [this.last_position + this.SEGMENT_LENGTH, h - height],
-	            [this.last_position, h - last_height]
+		    	[position, h - last_height + this.THICKNESS],
+	        	[position + this.SEGMENT_LENGTH, h - height + this.THICKNESS],
+	            [position + this.SEGMENT_LENGTH, h - height],
+	            [position, h - last_height]
 	        ];
     	},
 
-    	addSegment: function(last_position) {
-    		var height = this.HEIGHTS.shift();
-    		var segmentShape = this.getPolygon(this.last_height, height, this.last_position);
+    	addSegment: function(position, height) {
+    		var segmentShape = this.getPolygon(this.last_height, height, position);
     		this.last_height = height;
 
 
@@ -56,11 +74,11 @@ Ground = function(game, heights) {
     		//game.physics.p2.updateBoundsCollisionGroup();
 		    
 		    this.segments.push(segment);
+            this.last_position = position + this.SEGMENT_LENGTH;
     	}
     };
 	        
 	obj.material = obj.game.physics.p2.createMaterial('worldMaterial');
-    obj.addSegments();
 
     return obj;
 }
