@@ -6,17 +6,25 @@ app = {
 };
 
 $(function(){
-    app.socket = io.connect('http://'+ document.domain +':5000/race');
-    app.socket.on('connect', function() {
-        console.log('Connected to the server');
-    });
-
-    app.socket.on('data', function(msg) {
-        console.log('data:', msg);
-    });
-
     $('.start-menu').hide();
-    $("#start").click('init');
+    $("#start").click(init);
+
+    if(document.domain){
+        app.socket = io.connect('http://'+ document.domain +':5000/race');
+        app.socket.on('connect', function() {
+            console.log('Connected to the server');
+        });
+
+        app.socket.on('data', function(msg) {
+            app.heights = msg;
+            $('.start-menu').show();
+        }); 
+    }else{
+        $('.start-menu').show();
+        $.get('http://194.82.115.61:5000/data', {}, function (data) {
+            console.log('Got the data'); 
+        })        
+    }       
 });
 
 function init() {
@@ -47,7 +55,7 @@ function create() {
     app.arrows = app.game.input.keyboard.createCursorKeys();
     
     app.player = new Player(app.game);
-    app.ground = new Ground(app.game); 
+    app.ground = new Ground(app.game, app.heights); 
     app.game.camera.follow(app.player.car.body);   
 }
 
