@@ -35,7 +35,7 @@
   height: 200px;
 }
 
-.overlay p {
+.overlay form {
   position: absolute;
   background: rgba(255,255,255,1);
   top: 350px;
