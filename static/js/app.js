@@ -32,6 +32,11 @@ $(function(){
             console.log('Player info', msg);
             app.sid = msg;
         });
+
+        app.socket.on('track_info', function(msg) {
+            console.log('Track info', msg);
+            $('#info div:nth-child(1) p').text('Current track: ' + msg.name);
+        });
     }  
 });
 

@@ -60,28 +60,25 @@ def buildHistoryRequest(name, price, startDate, finishDate, frequency, session):
     return request
 
 #Builds a request for a ReferenceDataRequest
-def buildReferenceRequest():
+def buildReferenceRequest(session):
     
     refDataService = session.getService("//blp/refdata")
     request = refDataService.createRequest("ReferenceDataRequest")
-    request.append("securities","IBM US Equity")
-    request.getElement("fields").appendValue(price)
-
-    #request.set("security", name)
-    request.set("periodicitySelection",frequency)
-    request.set("startDate", startDate)
-    request.set("endDate", finishDate)
-    request.set("maxDataPoints", dataCapPerRequest)
+    request.append("securities","7202 JP Equity")
+    #request.append("securities", "/cusip/912828GM6@BGN")
+    request.append("fields", "PX_LAST")
+    #request.append("fields", "DS002")
 
     return request
 
 #Default method
 def main():
     initData()
-    specialAndyRequestRequest("20140101", "20140801", "DAILY")
+    #specialAndyRequestRequest("20140101", "20140801", "DAILY")
     #makeHistoricalRequest("Allianz SE",'apiRequests/dax.csv',"PX_MID","20140101", "20140801", "DAILY")
     #readInStocks('dax.csv', daxTickerList, daxNameList)
     #makeRandomHistoricalRequest(daxFileName,"20120101", "20121231", "MONTHLY")
+    makeReferenceDataRequest()
 
 #Getters
 def getStockNameList(name):
@@ -143,6 +140,64 @@ def makeRandomHistoricalRequest(index, startDate, finishDate, frequency):
     field = stockFieldList[random.randrange(0,len(stockFieldList))]
     #print stock
     return makeHistoricalRequest(stock, field, startDate, finishDate, frequency)
+
+    #Can be used to obtain live ticks.
+def makeReferenceDataRequest(): #name, index, priceField, interval
+    #tickerName = getMatchingTicker(name, index);
+     # Fill SessionOptions
+    sessionOptions = blpapi.SessionOptions()
+    sessionOptions.setServerHost(serverIP)
+    sessionOptions.setServerPort(port)
+
+    # Create a Session
+    session = blpapi.Session(sessionOptions)
+    valueList = []
+    # Start a Session
+    if not session.start():
+        print "Failed to start session."
+        return
+
+    try:
+        # Open service to get historical data from
+        if not session.openService("//blp/refdata"):
+            print "Failed to open //blp/refdata"
+            return
+
+        # Obtain previously opened service
+        request = buildReferenceRequest(session)
+
+        #print "Sending Request:", request
+        # Send the request
+        session.sendRequest(request)
+        # Process received events
+        counter = 0
+        while(True):
+            # We provide timeout to give the chance for Ctrl+C handling:
+            event = session.nextEvent(500)
+            for msg in event:
+                print msg
+                    # securityData = msg.getElement("securityData")
+                    # for field in securityData.values():
+                    #     fieldData = field.getElement("fieldData")
+                    #     if fieldData.hasElement("INDX_MEMBERS"):
+                    #         indxMembers = fieldData.getElement("INDX_MEMBERS")
+                    #         names = []
+                    #         for member in indxMembers.values():
+                    #             name = member.getElement("Member Ticker and Exchange Code").getValue()
+                    #             names += [name + " Index"]
+                    #         results = _getData(session, requestName, names, [GICS_SECTOR_NAME, TITLE])
+
+                if event.eventType() == blpapi.Event.RESPONSE:
+                # Response completly received, so we could exit
+                    break
+
+            counter = counter + 1
+    finally:
+        # Stop the session
+        print valueList
+        session.stop()
+    return valueList
+
 
 #Use to make request, Note "name" refers to the actual stock's name not its ticker.
 def makeHistoricalRequest(name, index, priceField, startDate, finishDate, frequency):
@@ -206,62 +261,6 @@ if __name__ == "__main__":
         print "Ctrl+C pressed. Stopping..."
 
 
-    #Can be used to obtain live ticks.
-    def makeReferenceDataRequest(name, index, priceField, interval):
-        tickerName = getMatchingTicker(name, index);
-        # Fill SessionOptions
-        sessionOptions = blpapi.SessionOptions()
-        sessionOptions.setServerHost(serverIP)
-        sessionOptions.setServerPort(port)
-
-        # Create a Session
-        session = blpapi.Session(sessionOptions)
-        valueList = []
-        # Start a Session
-        if not session.start():
-            print "Failed to start session."
-            return
-
-        try:
-            # Open service to get historical data from
-            if not session.openService("//blp/refdata"):
-                print "Failed to open //blp/refdata"
-                return
-
-            # Obtain previously opened service
-            request = buildHistoryRequest(tickerName, priceField, startDate, finishDate, frequency, session)
-
-            #print "Sending Request:", request
-            # Send the request
-            session.sendRequest(request)
-            # Process received events
-            counter = 0
-            while(True):
-                # We provide timeout to give the chance for Ctrl+C handling:
-                event = session.nextEvent(500)
-                for msg in event:
-                    print msg
-                        # securityData = msg.getElement("securityData")
-                        # for field in securityData.values():
-                        #     fieldData = field.getElement("fieldData")
-                        #     if fieldData.hasElement("INDX_MEMBERS"):
-                        #         indxMembers = fieldData.getElement("INDX_MEMBERS")
-                        #         names = []
-                        #         for member in indxMembers.values():
-                        #             name = member.getElement("Member Ticker and Exchange Code").getValue()
-                        #             names += [name + " Index"]
-                        #         results = _getData(session, requestName, names, [GICS_SECTOR_NAME, TITLE])
-
-                    if ev.eventType() == blpapi.Event.RESPONSE:
-                    # Response completly received, so we could exit
-                        break
-
-                counter = counter + 1
-        finally:
-            # Stop the session
-            print valueList
-            session.stop()
-        return valueList
 
 
 #---UNUSED CODE---

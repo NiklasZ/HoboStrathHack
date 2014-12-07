@@ -1,9 +1,9 @@
 Player = function(game) {
 
 	var car = {
-		body: game.add.sprite(200, 400,'moto'),
-		wheel_front: game.add.sprite(250, 430,'wheel'),
-		wheel_back: game.add.sprite(150, 430,'wheel'),
+		body: game.add.sprite(200, 100,'moto'),
+		wheel_front: game.add.sprite(250, 130,'wheel'),
+		wheel_back: game.add.sprite(150, 130,'wheel'),
 		collision_group: game.physics.p2.createCollisionGroup()
 	};
     
@@ -88,7 +88,15 @@ Player = function(game) {
                 var data = {
                     x: this.car.body.x,
                     y: this.car.body.y,
-                    r: this.car.body.rotation
+                    r: this.car.body.rotation,
+
+                    fx: this.car.wheel_front.x,
+                    fy: this.car.wheel_front.y,
+                    fr: this.car.wheel_front.rotation,
+
+                    bx: this.car.wheel_back.x,
+                    by: this.car.wheel_back.y,
+                    br: this.car.wheel_back.rotation
                 };
                 app.socket.emit('send_position', data);
             }
