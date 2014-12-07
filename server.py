@@ -68,9 +68,11 @@ def client_connect():
 def get_height(msg):
     if msg < len(normalized_heights):
         height = normalized_heights[msg]
+        raw_height = heights[msg]
     else:
         height = 0
-    emit('data', {"height": height, "pos": msg})
+        raw_height = 0
+    emit('data', {"height": height, "pos": msg, "raw": raw_height})
 
 @socketio.on('send_position', namespace='/race')
 def send_position(msg):

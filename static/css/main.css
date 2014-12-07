@@ -16,7 +16,6 @@ body { background: #E9E9E9; }
 }
 
 #info{
-	vertical-align: middle;
 	line-height: 70px;
 	height: 100%;
 }
@@ -27,6 +26,11 @@ body { background: #E9E9E9; }
 	font-size: 19px;
 	padding-left: 50px;
 	padding-right: 50px;
+}
+
+#info div:first-child{
+	width: 600px;
+	right: -140px;
 }
 .start-menu {
 	position: relative;
@@ -60,8 +64,7 @@ body { background: #E9E9E9; }
 }
 
 #help{
-	background-color: #A678B2;
-	border-color: #A678B2;
+	visibility: hidden;
 
 }
 
