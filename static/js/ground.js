@@ -12,7 +12,7 @@ Ground = function(game) {
 
     	addSegments: function() {
     		var pos = 0;
-    		for(var i in this.HEIGHTS){
+    		while(this.HEIGHTS.length > 0){
     			this.addSegment(pos);
     			pos += this.SEGMENT_LENGTH;
     		}
