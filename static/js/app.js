@@ -2,10 +2,12 @@ app = {
     game: null,
     width: 1500,
     height: 770,
-    cursor: null
+    cursor: null,
+    score: 0
 };
 
 $(function(){
+    $('.info-board').hide();
     $("#start").click(init);
 
     if(document.domain){
@@ -24,6 +26,7 @@ $(function(){
 });
 
 function init() {
+    $('.info-board').toggle("slide", { direction: "left" }, 700);
     $('.start-menu').hide();
     $('.overlay').overlay();
        
@@ -49,6 +52,7 @@ function create() {
     app.game.physics.p2.friction = 15;
     
     app.arrows = app.game.input.keyboard.createCursorKeys();
+    app.spaceKey = app.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     
     app.ground = new Ground(app.game);
     app.player = new Player(app.game);
@@ -65,4 +69,7 @@ function update() {
     }
 
     app.ground.updateSegments();
+
+    $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
+    if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
 }

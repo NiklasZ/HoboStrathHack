@@ -52,9 +52,13 @@ Player = function(game) {
 
 		accelerate_car: function(a) {
             var angVel = this.car.wheel_back.body.angularVelocity;
-     		if(angVel < 0 && a > 0 || angVel > 0 && a < 0){
-     			this.car.wheel_back.body.angularVelocity += a*3; // braking
-     		}else{
+            if (a == 0) {   // braking
+                this.car.wheel_front.body.angularVelocity = 0;
+                this.car.wheel_back.body.angularVelocity = 0;
+            } /* else if(angVel < 0 && a > 0 || angVel > 0 && a < 0){
+     			this.car.wheel_back.body.angularVelocity += a*10; // braking
+                this.car.wheel_front.body.angularVelocity += a*10;
+     		}*/else{
                 if (Math.abs(angVel) < 80) {
      			    this.car.wheel_back.body.angularVelocity += a*7;
                 }

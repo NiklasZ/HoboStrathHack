@@ -14,7 +14,6 @@
     <script src="static/js/overlay.js"></script>
     <script type="text/javascript" src="static/js/phaser.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
-    <script type="text/javascript" src="static/js/data.js"></script>
     <script type="text/javascript" src="static/js/player.js"></script>
     <script type="text/javascript" src="static/js/ground.js"></script>
     <script type="text/javascript" src="static/js/app.js"></script>
@@ -26,7 +25,16 @@
           <div class="overlay">
             <p>It sucks right now.</p>
           </div>
-            <div class="info-board"></div>
+            <div class="info-board">
+            <div class="row" id="info">
+              <div class="col-md-3">
+                <p>Current track:</p>
+              </div>
+              <div class="col-md-3">
+                <p>Distance: 0 m</p>
+              </div>
+            </div>
+            </div>
             <div class="start-menu">
               <div class="text">
                   <h2>Welcome to Moto Moto Moto.</h2>

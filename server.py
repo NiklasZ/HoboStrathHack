@@ -71,7 +71,7 @@ def normalize_heights():
 
 if __name__ == '__main__':
     initData()
-    heights = makeHistoricalRequest('Allianz SE', 'apiRequests/dax.csv', 'PX_MID', '20140101', '20140801', 'DAILY')
+    heights = makeHistoricalRequest('Allianz SE', 'dax', 'PX_MID', '20140101', '20140801', 'DAILY')
     normalize_heights()
     print 'Loaded data from the API'
     socketio.run(app, host='0.0.0.0')
