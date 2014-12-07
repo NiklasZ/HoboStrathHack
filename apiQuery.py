@@ -57,23 +57,23 @@ def makeHistoryRequest(name, price, startDate, finishDate, frequency, session):
     return request
 
 #Builds a request for an IntraBarRequest
-def makeIntraRequest(name, price, startDate, finishDate, frequency, session):
+# def makeIntraRequest(name, price, startDate, finishDate, frequency, session):
 
-    refDataService = session.getService("//blp/refdata")
-    request = refDataService.createRequest("IntradayBarRequest")
+#     refDataService = session.getService("//blp/refdata")
+#     request = refDataService.createRequest("IntradayBarRequest")
 
-    request.set("periodicityAdjustment", "ACTUAL")
-    request.set("periodicitySelection",frequency)
-    request.set("startDate", startDate)
-    request.set("endDate", finishDate)
-    request.set("maxDataPoints", dataCapPerRequest)
+#     request.set("periodicityAdjustment", "ACTUAL")
+#     request.set("periodicitySelection",frequency)
+#     request.set("startDate", startDate)
+#     request.set("endDate", finishDate)
+#     request.set("maxDataPoints", dataCapPerRequest)
 
-    return request
+#     return request
 
 #Default method
 def main():
     initData()
-    makeHistoricalRequest("Allianz SE",'dax.csv',"PX_MID","20140101", "20140801", "DAILY")
+    makeHistoricalRequest("Allianz SE",'apiRequests/dax.csv',"PX_MID","20140101", "20140801", "DAILY")
     #readInStocks('dax.csv', daxTickerList, daxNameList)
     #makeRandomHistoricalRequest(daxFileName,"20120101", "20121231", "MONTHLY")
 
@@ -108,56 +108,56 @@ def getStockFieldList(name):
     return stockFieldList
 
 #Makes a data request of a tick-by-tick history (goes 140 days back)
-def makeIntraDayBarRequest():
-    # Fill SessionOptions
-    sessionOptions = blpapi.SessionOptions()
-    sessionOptions.setServerHost(serverIP)
-    sessionOptions.setServerPort(port)
+# def makeIntraDayBarRequest():
+#     # Fill SessionOptions
+#     sessionOptions = blpapi.SessionOptions()
+#     sessionOptions.setServerHost(serverIP)
+#     sessionOptions.setServerPort(port)
 
-    # Create a Session
-    session = blpapi.Session(sessionOptions)
+#     # Create a Session
+#     session = blpapi.Session(sessionOptions)
 
-    # Start a Session
-    if not session.start():
-        print "Failed to start session."
-        return
-    #test
-    valueList = []
-    try:
-        # Open service to get historical data from
-        if not session.openService("//blp/refdata"):
-            print "Failed to open //blp/refdata"
-            return
+#     # Start a Session
+#     if not session.start():
+#         print "Failed to start session."
+#         return
+#     #test
+#     valueList = []
+#     try:
+#         # Open service to get historical data from
+#         if not session.openService("//blp/refdata"):
+#             print "Failed to open //blp/refdata"
+#             return
 
-        # Obtain previously opened service
-        request = makeIntraRequest(name, priceField, startDate, finishDate, frequency, session)
+#         # Obtain previously opened service
+#         request = makeIntraRequest(name, priceField, startDate, finishDate, frequency, session)
 
-        # Send the request
-        session.sendRequest(request)
-        # Process received events
-        counter = 0
-        while(True):
-            # We provide timeout to give the chance for Ctrl+C handling:
-            ev = session.nextEvent(500)
-            if counter > 2:
-                for msg in ev:
-                    #print msg
-                    fieldDataArr = msg.getElement("securityData").getElement("fieldData")
-                    for fieldData in fieldDataArr.values():
-                        data = fieldData.getElement(priceField)
-                        splitElement = data.toString().split()
-                        valueList.append(float(splitElement.pop()))
+#         # Send the request
+#         session.sendRequest(request)
+#         # Process received events
+#         counter = 0
+#         while(True):
+#             # We provide timeout to give the chance for Ctrl+C handling:
+#             ev = session.nextEvent(500)
+#             if counter > 2:
+#                 for msg in ev:
+#                     #print msg
+#                     fieldDataArr = msg.getElement("securityData").getElement("fieldData")
+#                     for fieldData in fieldDataArr.values():
+#                         data = fieldData.getElement(priceField)
+#                         splitElement = data.toString().split()
+#                         valueList.append(float(splitElement.pop()))
 
-            if ev.eventType() == blpapi.Event.RESPONSE:
-                # Response completly received, so we could exit
-                break
+#             if ev.eventType() == blpapi.Event.RESPONSE:
+#                 # Response completly received, so we could exit
+#                 break
 
-            counter = counter + 1
-    finally:
-        # Stop the session
-        session.stop()
-        #print valueList
-    return valueList
+#             counter = counter + 1
+#     finally:
+#         # Stop the session
+#         session.stop()
+#         #print valueList
+#     return valueList
 
 #Random historical Data Request
 def makeRandomHistoricalRequest(index, startDate, finishDate, frequency):
@@ -216,6 +216,7 @@ def makeHistoricalRequest(name, index, priceField, startDate, finishDate, freque
             counter = counter + 1
     finally:
         # Stop the session
+        print valueList
         session.stop()
     return valueList
 
