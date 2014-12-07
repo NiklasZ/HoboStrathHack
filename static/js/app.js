@@ -51,8 +51,8 @@ function init() {
 
 function preload() {
     app.game.load.spritesheet('boom', 'static/assets/explosion.hasgraphics.png', 100, 100, 75);
-    app.game.load.image('moto', 'static/assets/moto.png');
-    app.game.load.image('wheel', 'static/assets/wheel.png');
+    app.game.load.image('moto', 'static/assets/moto2.png');
+    app.game.load.image('wheel', 'static/assets/wheel1.png');
     app.game.load.physics('motophysics','static/assets/moto.json');
 }
 
