@@ -55,7 +55,7 @@ Player = function(game) {
      			this.car.wheel_back.body.angularVelocity += a*3; // braking
      		}else{
                 if (Math.abs(angVel) < 80) {
-     			    this.car.wheel_back.body.angularVelocity += a*6;
+     			    this.car.wheel_back.body.angularVelocity += a*7;
                 }
      		}
 		},
