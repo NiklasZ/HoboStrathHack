@@ -10,6 +10,11 @@ app = {
 $(function(){
     $('.info-board').hide();
     $("#start").click(init);
+/*
+    $("#pay").click(function(){
+        console.log('click');
+        $(this).parents('form').submit();
+    });*/
 
     if(document.domain){
         app.online = true;
