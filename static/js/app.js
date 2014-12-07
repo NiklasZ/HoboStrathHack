@@ -35,7 +35,7 @@ function init() {
 }
 
 function preload() {
-    //app.game.load.spritesheet('boom', '/assets/boom.png', 40, 40);
+    app.game.load.spritesheet('boom', 'assets/explode.png', 128, 128);
     app.game.load.image('moto', 'static/assets/moto.png');
     app.game.load.image('wheel', 'static/assets/wheel.png');
     app.game.load.physics('motophysics','static/assets/moto.json');
@@ -48,10 +48,10 @@ function create() {
     app.game.physics.p2.restitution = 0.4;
     
     app.game.stage.backgroundColor = '#DDDDDD';
-   /* var anim=app.game.add.sprite(0,0, 'boom');
+    var anim=app.game.add.sprite(310,310, 'boom');
 
-    anim.animations.add('run', [1, 2, 3, 4, 5, 6, 7, 8], 60, true);
-    anim.play('run');*/
+    anim.animations.add('explode');
+    anim.animations.play('explode',30,true);
     
     // setting gravity
     app.game.physics.p2.gravity.y = 1500;
