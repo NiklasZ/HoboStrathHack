@@ -13,6 +13,8 @@ $(function(){
     $('.info-board').hide();
     $("#start").click(init);
 
+    app.paid = window.paid == '$$$';
+
     app.width = $(window).width() - 100;
     //app.height = $(window).height() - 100;
 
@@ -64,8 +66,8 @@ function preload() {
     app.game.load.image('moto_black', 'static/assets/moto.png');
     app.game.load.image('wheel_black', 'static/assets/wheel.png');
 
-    app.game.load.image('moto', 'static/assets/moto1Pimp1.png');
-    app.game.load.image('wheel', 'static/assets/wheel1Pimp.png');
+    app.game.load.image('moto', app.paid ? 'static/assets/moto1Pimp1.png' : 'static/assets/moto2.png');
+    app.game.load.image('wheel', app.paid ? 'static/assets/wheel1Pimp.png' : 'static/assets/wheel1.png');
     app.game.load.physics('motophysics','static/assets/moto.json');
 
     app.game.load.audio('ambient','static/assets/explosion.ogg');
