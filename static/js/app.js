@@ -79,6 +79,9 @@ function update() {
     if (app.arrows.right.isDown) {
         app.player.accelerate_car(4);
     }
+    if (app.spaceKey.isDown) {
+        app.player.accelerate_car(0);
+    }
 
     app.ground.updateSegments();
 
@@ -102,5 +105,5 @@ function show_competitors(data) {
 }
 
 function explosion() {
-    window.alert("you exlode");
+    //window.alert("you exlode");
 }
