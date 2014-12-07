@@ -20,10 +20,8 @@ $(function(){
             $('.start-menu').show();
         }); 
     }else{
-        $('.start-menu').show();
-        $.get('http://194.82.115.61:5000/data', {}, function (data) {
-            console.log('Got the data'); 
-        })        
+        app.heights = sample_data['Allianz SE 2014'];
+        $('.start-menu').show();      
     }       
 });
 
