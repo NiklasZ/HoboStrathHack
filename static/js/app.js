@@ -51,7 +51,7 @@ function init() {
     $('.overlay').overlay();
 
        
-    app.game = new Phaser.Game(app.width, app.height, Phaser.AUTO, 'gameDiv', { preload: preload, create: create, update: update });
+    app.game = new Phaser.Game(app.width, app.height, Phaser.CANVAS, 'gameDiv', { preload: preload, create: create, update: update });
 }
 
 function preload() {
@@ -81,14 +81,22 @@ function create() {
     app.arrows = app.game.input.keyboard.createCursorKeys();
     app.spaceKey = app.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     
-    app.ground = new Ground(app.game);
     app.player = new Player(app.game);
+    app.ground = new Ground(app.game);
     app.ground.updateSegments(); 
     app.game.camera.follow(app.player.car.body);
 
     app._competitors = app.game.add.group();
-    app._competitors.z = -99;
-    app._competitors.updateZ();
+
+    for (i=0; i<2*app.game.height; i += 100) {
+        addHorizontalLines(i);
+    }
+
+    //app.stockChangeText = app.game.add.text(app.player.car.body.body.x+150, 150, "suuuper bonus!", { font: "30px Arial", fill: "#ff0044", align: "center" });
+    //app.stockChangeText.anchor.setTo(0.5, 0.5);
+
+    //app._competitors.z = -99;
+    //app._competitors.updateZ();
 }
 
 function update() {
@@ -102,12 +110,29 @@ function update() {
         app.player.accelerate_car(0);
     }
 
-    app.ground.updateSegments();
-
     $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
     if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
 
     app.player.send_car_position();
+
+    app.ground.updateSegments();
+    updateText();
+}
+
+function updateText() {
+    //app.stockChangeText.x = app.width-150;
+    //app.stockChangeText.y = 150;
+}
+
+function addHorizontalLines(position) {
+    gridLine = new Phaser.Polygon([ new Phaser.Point(0, position+1),
+                                    new Phaser.Point(19200, position+1),
+                                    new Phaser.Point(19200, position),
+                                    new Phaser.Point(0, position) ]);
+        graphics = app.game.add.graphics(0, 0),
+        graphics.beginFill(0x000000, 0.4);
+        graphics.drawPolygon(gridLine.points);
+        graphics.endFill();
 }
 
 function show_competitors(data) {
@@ -138,4 +163,8 @@ function explosion() {
     },600);
     
 
+}
+
+function drawAxes(){
+    
 }
