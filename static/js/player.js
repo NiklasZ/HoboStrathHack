@@ -56,7 +56,9 @@ Player = function(game) {
      		if(angVel < 0 && a > 0 || angVel > 0 && a < 0){
      			this.car.wheel_back.body.angularVelocity += a*3; // braking
      		}else{
-     			this.car.wheel_back.body.angularVelocity += a*(1 + 10/(angVel+1));
+                if (Math.abs(angVel) < 80) {
+     			    this.car.wheel_back.body.angularVelocity += a*6;
+                }
      		}
 		},
 
