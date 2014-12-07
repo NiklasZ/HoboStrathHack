@@ -13,6 +13,7 @@
     <script src="static/js/jquery-ui.min.js"></script>
     <script src="static/js/overlay.js"></script>
     <script type="text/javascript" src="static/js/phaser.js"></script>
+    <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
     <script type="text/javascript" src="static/js/player.js"></script>
     <script type="text/javascript" src="static/js/ground.js"></script>
@@ -23,7 +24,10 @@
       <div class="container" style="width: 1506px; height: 800px;">
         <div class="row">
           <div class="overlay">
-            <p>It sucks right now.</p>
+            <form id="checkout" method="post" action="/checkout">
+              <div id="dropin"></div>
+              <input type="submit" value="Pay $10">
+            </form>
           </div>
             <div class="info-board">
             <div class="row" id="info">
