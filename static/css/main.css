@@ -28,6 +28,10 @@ body { background: #E9E9E9; }
 	padding-right: 50px;
 }
 
+strong.money{
+	color: #FFF;
+}
+
 #info div:first-child{
 	width: 600px;
 	right: -140px;

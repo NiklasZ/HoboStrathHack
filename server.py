@@ -46,16 +46,25 @@ def index():
     if not 'sid' in session:
         session['sid'] = int(random.random()*1000000)
         get_player(session['sid'])
+    if 'paid' in session:
+        paid = session['paid']
+    else:    
+        paid = False
 
-    return render_template('index.html', client_token = braintree.ClientToken.generate()) 
+    return render_template('index.html', client_token = braintree.ClientToken.generate(), paid = '$$$' if paid else '' ) 
 
-@app.route("/purchases", methods=["POST"])
-def create_purchase():
+@app.route("/checkout", methods=["POST"])
+def create_transaction():
     nonce = request.form["payment_method_nonce"]
-    print braintree.Transaction.sale({
+    result = braintree.Transaction.sale({
         "amount": "10.00",
         "payment_method_nonce": "nonce-from-the-client"
     })
+    if result.is_success:
+        session['paid'] = True
+        return render_template('payment_successful.html') 
+    else:
+        return render_template('payment_unsuccessful.html')
 
 @socketio.on('connect', namespace='/race')
 def client_connect():
