@@ -31,11 +31,13 @@ function init() {
     $('.info-board').toggle("slide", { direction: "left" }, 700);
     $('.start-menu').hide();
     $('.overlay').overlay();
+
        
     app.game = new Phaser.Game(app.width, app.height, Phaser.AUTO, 'gameDiv', { preload: preload, create: create, update: update });
 }
 
 function preload() {
+    //app.game.load.spritesheet('boom', '/assets/boom.png', 40, 40);
     app.game.load.image('moto', 'static/assets/moto.png');
     app.game.load.image('wheel', 'static/assets/wheel.png');
     app.game.load.physics('motophysics','static/assets/moto.json');
@@ -48,6 +50,10 @@ function create() {
     app.game.physics.p2.restitution = 0.4;
     
     app.game.stage.backgroundColor = '#DDDDDD';
+   /* var anim=app.game.add.sprite(0,0, 'boom');
+
+    anim.animations.add('run', [1, 2, 3, 4, 5, 6, 7, 8], 60, true);
+    anim.play('run');*/
     
     // setting gravity
     app.game.physics.p2.gravity.y = 1500;
