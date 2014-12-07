@@ -73,7 +73,9 @@ function init() {
     $('.start-menu').hide();
     $('.overlay').overlay();
 
-    app.socket.emit('send_name', $('#playername').val());
+    if(app.online){
+        app.socket.emit('send_name', $('#playername').val());
+    }
        
     app.game = new Phaser.Game(app.width, app.height, Phaser.CANVAS, 'gameDiv', { preload: preload, create: create, update: update, render: render });
 }
@@ -160,7 +162,7 @@ function update() {
     app.ground.updateSegments();
     updateText();
 
-    if(app.player.car.body.x > 2000 && !app.won_send){
+    if(app.online && app.player.car.body.x > 19000 && !app.won_send){
         console.log('I won');
         app.won_send = true;
         app.socket.emit('i_won');
