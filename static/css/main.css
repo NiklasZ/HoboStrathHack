@@ -30,6 +30,7 @@ body { background: #E9E9E9; }
 
 strong.money{
 	color: #FFF;
+	font-size: 18pt;
 }
 
 #info div:first-child{

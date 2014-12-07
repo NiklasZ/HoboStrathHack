@@ -22,7 +22,7 @@ Ground = function(game) {
 
         updateSegments: function() {
             var position = this.last_position;
-            while(position - app.player.car.body.x < 1000){
+            while(position - app.player.car.body.x < 2000){
                 this.addLine(position);
                 if(!app.online){
                     this.addSegment(position, this.getHeight(position));
@@ -36,7 +36,7 @@ Ground = function(game) {
                 }
                 position += this.SEGMENT_LENGTH;
             }
-            if( this.segments[0] && app.player.car.body.x - this.segments[0].x > 1000){
+            if( this.segments[0] && app.player.car.body.x - this.segments[0].x > 2000){
                 this.segments[0].destroy();
                 this.segments.shift();
                 this.polygons[0].destroy();

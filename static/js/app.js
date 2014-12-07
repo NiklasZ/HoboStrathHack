@@ -10,12 +10,14 @@ app = {
 $(function(){
     $('.info-board').hide();
     $("#start").click(init);
-/*
-    $("#pay").click(function(){
-        console.log('click');
-        $(this).parents('form').submit();
-    });*/
 
+    app.width = $(window).width() - 100;
+    //app.height = $(window).height() - 100;
+
+    $('#viewport').width(app.width);
+    $('.info-board').width(app.width + 6);
+    $('#viewport').height(app.height);
+    
     if(document.domain){
         app.online = true;
 
