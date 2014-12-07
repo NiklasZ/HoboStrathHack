@@ -70,7 +70,7 @@ function update() {
 }
 
 function generatePoint(){
-    var max = 20, min = 0;
+    var max = 120, min = -30;
     return randHeight = Math.random()*(max - min) + min;
 
 }
@@ -81,7 +81,7 @@ function updateGround(){
         app.ground.addSegments();
     }
     for (var i = 0; i < app.ground.segments.length; i++) {
-        if(app.player.car.body.x - app.ground.segments[i].x > 1200){
+        if(app.player.car.body.x - app.ground.segments[i].x > 1000){
             app.ground.segments[i].destroy();
         }
     };

@@ -11,6 +11,7 @@ Ground = function(game, heights) {
         last_position: 0,
 
     	segments: [],
+        collision_group: game.physics.p2.createCollisionGroup(),
 
     	addSegments: function() {
     		while(this.HEIGHTS.length){
@@ -34,7 +35,6 @@ Ground = function(game, heights) {
     		var segmentShape = this.getPolygon(this.last_height, height, this.last_position);
     		this.last_height = height;
 
-    		var collision_group = game.physics.p2.createCollisionGroup();
 
     		var segment = this._ground.create(0,0);
 			segment.anchor.setTo(0.5, 0.5)
@@ -42,18 +42,18 @@ Ground = function(game, heights) {
     
 		    segment.body.addPolygon({}, segmentShape);
 		    segment.body.kinematic = true;
-		    segment.body.setCollisionGroup(collision_group);
+		    segment.body.setCollisionGroup(this.collision_group);
 		    segment.body.fixedRotation = true;
 		    segment.body.data.gravityScale = 0;
 		    segment.body.collideWorldBounds = false;
     
-    		app.player.car_collides_with(collision_group, segment);
+    		app.player.car_collides_with(this.collision_group, segment);
 
 			segment.body.setMaterial(this.material);
 		    var contactMaterial = this.game.physics.p2.createContactMaterial(app.player.car.material, this.material);
 		    contactMaterial.friction = 5;     // Friction to use in the contact of these two materials.
 
-    		game.physics.p2.updateBoundsCollisionGroup();
+    		//game.physics.p2.updateBoundsCollisionGroup();
 		    
 		    this.segments.push(segment);
     	}
