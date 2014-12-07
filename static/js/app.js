@@ -44,4 +44,23 @@ function update() {
     if (app.arrows.right.isDown) {
         app.player.accelerate_car(4);
     }
+    updateGround();
+}
+
+function generatePoint(){
+    var max = 20, min = 0;
+    return randHeight = Math.random()*(max - min) + min;
+
+}
+
+function updateGround(){
+    if(app.player.car.body.x > app.width/2){
+        app.ground.HEIGHTS.push(generatePoint());
+        app.ground.addSegments();
+    }
+    for (var i = 0; i < app.ground.segments.length; i++) {
+        if(app.player.car.body.x - app.ground.segments[i].x > 1200){
+            app.ground.segments[i].destroy();
+        }
+    };
 }

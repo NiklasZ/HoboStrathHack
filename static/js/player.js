@@ -18,12 +18,12 @@ Player = function(game) {
 
     car.wheel_front.body.setCircle(20);
     car.wheel_front.body.debug = false;
-    car.wheel_front.body.mass = 1;
+    car.wheel_front.body.mass = 4;
     car.wheel_front.body.setCollisionGroup(car.collision_group);
 
     car.wheel_back.body.setCircle(20);
     car.wheel_back.body.debug = false;
-    car.wheel_back.body.mass = 1;
+    car.wheel_back.body.mass = 4;
     car.wheel_back.body.setCollisionGroup(car.collision_group);
 
     car.material = game.physics.p2.createMaterial('spriteMaterial');	
