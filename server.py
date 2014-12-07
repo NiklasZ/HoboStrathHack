@@ -83,6 +83,16 @@ def get_height(msg):
         raw_height = 0
     emit('data', {"height": height, "pos": msg, "raw": raw_height})
 
+@socketio.on('send_name', namespace='/race')
+def send_name(msg):
+    player = get_player(session['sid'])
+    player.set_name(msg)
+
+@socketio.on('i_won', namespace='/race')
+def i_won():
+    print 'someone won', session['sid']
+    emit('he_won', session['sid'], broadcast=True)
+
 @socketio.on('send_position', namespace='/race')
 def send_position(msg):
     player = get_player(session['sid'])

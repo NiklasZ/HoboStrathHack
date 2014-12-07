@@ -6,7 +6,8 @@ app = {
     score: 0,
     competitors: {},
     active_segment: 0,
-    explosion_sound: null
+    explosion_sound: null,
+    won_send: false
 };
 
 $(function(){
@@ -48,6 +49,22 @@ $(function(){
             console.log('Track info', msg);
             $('#info div:nth-child(1) p').text('Current track: ' + msg.name);
         });
+
+        app.socket.on('he_won', function(msg) {
+            console.log('Someone won', msg);
+            app.player.car.wheel_front.destroy();
+            app.player.car.wheel_back.destroy();
+            app.player.car.body.destroy();
+            $("#help").click();
+            $("#checkout").hide();
+
+            if(msg == app.sid){
+                $("#win").html('You won!');                
+            }else{
+                var name = app.competitors[msg].name || '#' + msg;
+                $("#win").html(name + ' won!'); 
+            }   
+        });
     }  
 });
 
@@ -56,6 +73,7 @@ function init() {
     $('.start-menu').hide();
     $('.overlay').overlay();
 
+    app.socket.emit('send_name', $('#playername').val());
        
     app.game = new Phaser.Game(app.width, app.height, Phaser.CANVAS, 'gameDiv', { preload: preload, create: create, update: update, render: render });
 }
@@ -136,6 +154,12 @@ function update() {
 
     app.ground.updateSegments();
     updateText();
+
+    if(app.player.car.body.x > 2000 && !app.won_send){
+        console.log('I won');
+        app.won_send = true;
+        app.socket.emit('i_won');
+    }
 }
 
 function updateText() {

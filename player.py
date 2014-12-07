@@ -13,6 +13,8 @@ class Player:
 		self.by = 0
 		self.br = 0
 
+		self.name = ''
+
 	def set_position(self, position):
 		self.x = position['x']
 		self.y = position['y']
@@ -25,4 +27,7 @@ class Player:
 		self.by = position['by']
 
 	def get_data(self):
-		return {"x": self.x, "y": self.y, "r": self.r, "fx": self.fx, "fy": self.fy, "bx": self.bx, "by": self.by}
+		return {"x": self.x, "y": self.y, "r": self.r, "fx": self.fx, "fy": self.fy, "bx": self.bx, "by": self.by, "name": self.name}
+
+	def set_name(self, name):
+		self.name = name

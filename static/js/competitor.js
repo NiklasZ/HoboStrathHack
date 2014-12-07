@@ -25,6 +25,8 @@ Competitor = function(group) {
 
             this.car.wheel_back.position.x = data.bx;
             this.car.wheel_back.position.y = data.by;
+
+            this.name = data.name;
         }
 	}
 }

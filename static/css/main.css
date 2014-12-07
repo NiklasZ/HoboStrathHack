@@ -49,6 +49,12 @@ strong.money{
 
 }
 
+#playername {
+	color: #444;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
 .text{
 	position: relative;
 	margin-left: auto;
@@ -72,6 +78,15 @@ strong.money{
 }
 
 #dropin {
-	width: 50%;
+	width: 40%;
 	margin: 0 auto;
+}
+
+#win {
+	font-size: 64px;
+	text-align: center;
+	position: absolute;
+	top: 50%;
+	width: 100%;
+	background: #fff;
 }
