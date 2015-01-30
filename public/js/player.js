@@ -20,7 +20,7 @@ Player = function(game) {
 
     car.wheel_front.body.setCircle(20);
     car.wheel_front.body.debug = false;
-    car.wheel_front.body.mass = 4;
+    car.wheel_front.body.mass = 3;
     car.wheel_front.body.setCollisionGroup(car.collision_group);
 
     car.wheel_back.body.setCircle(20);
@@ -32,8 +32,8 @@ Player = function(game) {
 	car.wheel_front.body.setMaterial(car.material);
 	car.wheel_back.body.setMaterial(car.material);
 
-    car.spring_front = game.physics.p2.createSpring(car.body, car.wheel_front, 65, 500, 150, null, null, [35,0], null);
-    car.spring_back = game.physics.p2.createSpring(car.body, car.wheel_back, 65, 500, 150, null, null, [-35,0], null);
+    car.spring_front = game.physics.p2.createSpring(car.body, car.wheel_front, 65, 500, 100, null, null, [35,0], null);
+    car.spring_back = game.physics.p2.createSpring(car.body, car.wheel_back, 65, 500, 100, null, null, [-35,0], null);
     //Spring(world, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB)
 
     var constraint = game.physics.p2.createPrismaticConstraint(car.body, car.wheel_front, false,[30,0],[0,0],[0,1]);
@@ -71,7 +71,7 @@ Player = function(game) {
                 if (Math.abs(angVel) < 80) {
      			    this.car.wheel_back.body.angularVelocity += a*7;
                 } else {
-                    this.car.body.body.angularVelocity -= a/4;
+                    this.car.body.body.angularVelocity -= a*(3/(Math.abs(this.car.body.body.angularVelocity)+10));  
                 }
      		}
 		},
