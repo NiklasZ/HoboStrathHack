@@ -10,6 +10,13 @@ app = {
     won_send: false
 };
 
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
 $(function(){
     $('.info-board').hide();
     $("#start").click(init);
@@ -74,7 +81,9 @@ function init() {
     $('.overlay').overlay();
 
     if(app.online){
-        app.socket.emit('send_name', $('#playername').val());
+        var name = $('#playername').val();
+        app.socket.emit('send_name', name);
+        setCookie('uname', name);
     }
        
     app.game = new Phaser.Game(app.width, app.height, Phaser.CANVAS, 'gameDiv', { preload: preload, create: create, update: update, render: render });
@@ -112,6 +121,7 @@ function create() {
     app.spaceKey = app.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     
     app.player = new Player(app.game);
+    app.player.name = $('#playername').val();
     app.ground = new Ground(app.game);
     app.ground.updateSegments(); 
     app.game.camera.follow(app.player.car.body);
@@ -220,7 +230,5 @@ function drawAxes(){
 }
 
 function render () {
-
     app.game.debug.text('Historical stock price: ' + app.active_segment.toFixed(2), 100, 132, "#666699","16px Verdana");
-
 }

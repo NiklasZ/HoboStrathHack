@@ -42,11 +42,12 @@ app.get('/', function (req, res) {
         res.cookie('uid', uid);
     }
 
+    var name = req.cookies.uname || '';
 
     var player = getPlayer(uid);
 
     gateway.clientToken.generate({}, function (err, response) {
-        res.render('index', {client_token: response.clientToken, paid: player.paid ? '$$$' : ''});
+        res.render('index', {client_token: response.clientToken, name: name, paid: player.paid ? '$$$' : ''});
     });
 });
 
