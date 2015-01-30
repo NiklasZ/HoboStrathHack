@@ -68,7 +68,7 @@ app.post('/checkout', function (req, res) {
     });
 });
 
-server.listen(3000, function () {
+server.listen(process.env.PORT || 3000, function () {
 
     var host = server.address().address;
     var port = server.address().port;
