@@ -38,7 +38,7 @@ function getPlayer(uid) {
 app.get('/', function (req, res) {
     var uid = req.cookies.uid;
     if(!uid){
-        uid = Math.round(Math.rand() * 10000);
+        uid = Math.round(Math.random() * 10000);
         res.cookie('uid', uid);
     }
 
