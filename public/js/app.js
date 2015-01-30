@@ -26,7 +26,12 @@ $(function(){
     if(document.domain){
         app.online = true;
 
-        app.socket = io.connect('http://'+ document.domain +':3000/');
+        var port = location.port;
+        if(port){
+            port = ':' + port;
+        }
+
+        app.socket = io.connect('http://'+ document.domain + port + '/');
         app.socket.on('connect', function() {
             console.log('Connected to the server');
         });
