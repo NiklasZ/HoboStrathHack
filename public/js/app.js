@@ -26,7 +26,7 @@ $(function(){
     if(document.domain){
         app.online = true;
 
-        app.socket = io.connect('http://'+ document.domain +':5000/race');
+        app.socket = io.connect('http://'+ document.domain +':3000/');
         app.socket.on('connect', function() {
             console.log('Connected to the server');
         });
@@ -81,17 +81,17 @@ function init() {
 }
 
 function preload() {
-    app.game.load.spritesheet('boom', 'static/assets/explosion.hasgraphics.png', 100, 100, 75);
+    app.game.load.spritesheet('boom', 'assets/explosion.hasgraphics.png', 100, 100, 75);
 
-    app.game.load.image('moto_black', 'static/assets/moto.png');
-    app.game.load.image('wheel_black', 'static/assets/wheel.png');
+    app.game.load.image('moto_black', 'assets/moto.png');
+    app.game.load.image('wheel_black', 'assets/wheel.png');
 
-    app.game.load.image('moto', app.paid ? 'static/assets/moto1Pimp1.png' : 'static/assets/moto2.png');
-    app.game.load.image('wheel', app.paid ? 'static/assets/wheel1Pimp.png' : 'static/assets/wheel1.png');
-    app.game.load.physics('motophysics','static/assets/moto.json');
+    app.game.load.image('moto', app.paid ? 'assets/moto1Pimp1.png' : 'assets/moto2.png');
+    app.game.load.image('wheel', app.paid ? 'assets/wheel1Pimp.png' : 'assets/wheel1.png');
+    app.game.load.physics('motophysics','assets/moto.json');
 
-    app.game.load.audio('ambient','static/assets/explosion.ogg');
-    app.game.load.audio('theme','static/assets/theme.ogg');
+    app.game.load.audio('ambient','assets/explosion.ogg');
+    app.game.load.audio('theme','assets/theme.ogg');
 }
 
 function create() {
