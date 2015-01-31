@@ -15,7 +15,6 @@ function addPhaserP2_debug(P2_object,type)
         var springSprite = app.game.add.tileSprite(0, 0, 24, (P2_object.restLength * 20), 'spring');
         springSprite.anchor.setTo(0.5, 0);
         springSprite.rest = 0;
-        console.log(P2_object);
         var point_A = app.game.add.sprite((P2_object.localAnchorA[0]*20), (P2_object.localAnchorA[1]*20)); //DUMMY
         var point_B = app.game.add.sprite((P2_object.localAnchorB[0]*20), (P2_object.localAnchorB[1]*20)); //DUMMY
         P2_object.bodyA.parent.sprite.addChild(point_A)

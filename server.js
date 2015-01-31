@@ -89,7 +89,7 @@ io.on('connection', function (socket) {
 
         socket.on('get_height', function(data) {
             if(!heights[data]){
-                var max = 120, min = -30;
+                var max = 40, min = -10;
                 heights[data] = Math.random()*(max - min) + min;
             }
             socket.emit('data', {"height": heights[data], "pos": data, "raw": heights[data]})

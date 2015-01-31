@@ -25,9 +25,11 @@ Competitor = function(group) {
 
             this.car.wheel_front.position.x = data.fx;
             this.car.wheel_front.position.y = data.fy;
+            this.car.wheel_back.rotation = data.br;
 
             this.car.wheel_back.position.x = data.bx;
             this.car.wheel_back.position.y = data.by;
+            this.car.wheel_back.rotation = data.br;
 
             this.name = data.name;
             car.name_text.setText(this.name);
