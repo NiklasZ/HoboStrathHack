@@ -126,4 +126,4 @@ setInterval(function() {
         };
     });
     io.sockets.emit('broadcast_positions', data);
-}, 50);
+}, 15);
