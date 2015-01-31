@@ -6,7 +6,7 @@ Ground = function(game) {
 
     	game: game,
     	_ground: game.add.group(),
-    	last_height: 0,
+    	last_height: 200,
         last_position: 0,
         emmited: -1,
         active_segment: null,
@@ -121,4 +121,4 @@ Ground = function(game) {
 	obj.material = obj.game.physics.p2.createMaterial('worldMaterial');
 
     return obj;
-}
+};

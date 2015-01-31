@@ -89,8 +89,19 @@ io.on('connection', function (socket) {
 
         socket.on('get_height', function(data) {
             if(!heights[data]){
-                var max = 80, min = -10;
-                heights[data] = Math.random()*(max - min) + min;
+                var previousHeight = heights[data-1] ? heights[data-1] : 200;
+                var previousHeight2 = heights[data-2] ? heights[data-2] : 200.1;
+                var slope = previousHeight - previousHeight2;
+
+                var p = (previousHeight + 100)/400;
+                var rand = Math.random() * 300 - 150;
+                var p2 = (slope + rand + 100) / 200;
+                var slopeChangeSize = 100;
+                var slopeChange = Math.random() * (slopeChangeSize - (slopeChangeSize * (p + p2)));
+
+                heights[data] = previousHeight + slope + slopeChange + rand;
+                if(heights[data] > 400)  { heights[data] = 400;  }
+                if(heights[data] < -150) { heights[data] = -150; }
             }
             socket.emit('data', {"height": heights[data], "pos": data, "raw": heights[data]})
         });
