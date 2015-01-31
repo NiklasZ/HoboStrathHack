@@ -182,6 +182,7 @@ function update() {
     }
 
     updatePhaserP2_debug();
+    app.player.car.body.body.onEndContact.add(crush_trigger,this);
 }
 
 function updateText() {
@@ -209,6 +210,25 @@ function show_competitors(data) {
                 app.competitors[sid] = new Competitor(app._competitors);
             }
             app.competitors[sid].updatePosition(player_data);
+        }
+    }
+}
+
+function crush_trigger() {
+    var ang = app.player.car.body.body.angle;
+    if ((ang <= 180 && ang >= 120) || (ang >= -180 && ang <= -120)) {
+        var anim=app.game.add.sprite(1320 - 50*app.player.life.length, 60, 'boom');
+        anim.fixedToCamera = true;
+        anim.animations.add('explode');
+        anim.animations.play('explode',60,false);
+        app.player.life[0].destroy();
+        app.explosion_sound.play('',0,1,false);
+
+        if (app.player.life.length <= 1) {
+            explosion();
+        } else {
+            app.player.reborn_player();
+            app.player.life.shift();
         }
     }
 }

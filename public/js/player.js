@@ -7,6 +7,12 @@ Player = function(game) {
 		collision_group: game.physics.p2.createCollisionGroup()
 	};
     
+    var life = [];
+    for (i=0; i<3; i++) {
+        sprite = game.add.sprite(1200 + i*50, 90,'wheel');
+        sprite.fixedToCamera = true;
+        life.push(sprite);
+    }
     
     game.physics.p2.enable([car.wheel_front, car.wheel_back, car.body]);
 
@@ -51,19 +57,12 @@ Player = function(game) {
 
     game.physics.p2.updateBoundsCollisionGroup();
 
-    var crush_trigger = function() {
-        var ang = this.car.body.body.angle;
-        if ((ang <= 180 && ang >= 120) || (ang >= -180 && ang <= -120)) {
-            explosion();
-        }
-    };
-
 	return {
 		car: car,
 		game: game,
+        life: life,
 
 		accelerate_car: function(a) {
-            this.car.body.body.onEndContact.add(crush_trigger,this);
             var angVel = this.car.wheel_back.body.angularVelocity;
             if (a == 0) {   // braking
                 this.car.wheel_front.body.angularVelocity = 0;
@@ -79,6 +78,29 @@ Player = function(game) {
                 }
      		}
 		},
+
+        reborn_player: function() {
+            this.car.body.body.angularForce = 0;
+            this.car.body.body.angularVelocity = 0;
+            this.car.body.body.rotation = 0;
+            this.car.body.body.velocity.x = 0;
+            this.car.body.body.velocity.y = 0;
+            this.car.body.body.y -= 250;
+
+            this.car.wheel_front.body.angularForce = 0;
+            this.car.wheel_front.body.angularVelocity = 0;
+            this.car.wheel_front.body.velocity.x = 0
+            this.car.wheel_front.body.velocity.y = 0
+            this.car.wheel_front.body.y = this.car.body.body.y + 20;
+            this.car.wheel_front.body.x = this.car.body.body.x + 30;
+
+            this.car.wheel_back.body.angularForce = 0;
+            this.car.wheel_back.body.angularVelocity = 0;
+            this.car.wheel_back.body.velocity.x = 0;
+            this.car.wheel_back.body.velocity.y = 0;
+            this.car.wheel_back.body.y = this.car.body.body.y + 20;
+            this.car.wheel_back.body.x = this.car.body.body.x - 30;
+        },
 
 		car_collides_with: function(collision_group, segment) {
 		    segment.body.collides(this.car.collision_group);
