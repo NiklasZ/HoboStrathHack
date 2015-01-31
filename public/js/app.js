@@ -7,8 +7,16 @@ app = {
     competitors: {},
     active_segment: 0,
     explosion_sound: null,
-    won_send: false
+    won_send: false,
+    debug: {springs: [], constraints: []}
 };
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
 
 $(function(){
     $('.info-board').hide();
@@ -26,7 +34,7 @@ $(function(){
     if(document.domain){
         app.online = true;
 
-        app.socket = io.connect('http://'+ document.domain +':5000/race');
+        app.socket = io.connect(location.host);
         app.socket.on('connect', function() {
             console.log('Connected to the server');
         });
@@ -74,24 +82,28 @@ function init() {
     $('.overlay').overlay();
 
     if(app.online){
-        app.socket.emit('send_name', $('#playername').val());
+        var name = $('#playername').val();
+        app.socket.emit('send_name', name);
+        setCookie('uname', name);
     }
        
     app.game = new Phaser.Game(app.width, app.height, Phaser.CANVAS, 'gameDiv', { preload: preload, create: create, update: update, render: render });
 }
 
 function preload() {
-    app.game.load.spritesheet('boom', 'static/assets/explosion.hasgraphics.png', 100, 100, 75);
+    app.game.load.spritesheet('boom', 'assets/explosion.hasgraphics.png', 100, 100, 75);
 
-    app.game.load.image('moto_black', 'static/assets/moto.png');
-    app.game.load.image('wheel_black', 'static/assets/wheel.png');
+    app.game.load.image('moto_black', 'assets/moto.png');
+    app.game.load.image('wheel_black', 'assets/wheel.png');
 
-    app.game.load.image('moto', app.paid ? 'static/assets/moto1Pimp1.png' : 'static/assets/moto2.png');
-    app.game.load.image('wheel', app.paid ? 'static/assets/wheel1Pimp.png' : 'static/assets/wheel1.png');
-    app.game.load.physics('motophysics','static/assets/moto.json');
+    app.game.load.image('moto', app.paid ? 'assets/moto1Pimp1.png' : 'assets/moto2.png');
+    app.game.load.image('wheel', app.paid ? 'assets/wheel1Pimp.png' : 'assets/wheel1.png');
+    app.game.load.physics('motophysics','assets/moto.json');
 
-    app.game.load.audio('ambient','static/assets/explosion.ogg');
-    app.game.load.audio('theme','static/assets/theme.ogg');
+    app.game.load.audio('ambient','assets/explosion.ogg');
+    app.game.load.audio('theme','assets/theme.ogg');
+
+    initPhaserP2_debug();
 }
 
 function create() {
@@ -112,13 +124,14 @@ function create() {
     app.spaceKey = app.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     
     app.player = new Player(app.game);
+    app.player.name = $('#playername').val();
     app.ground = new Ground(app.game);
     app.ground.updateSegments(); 
     app.game.camera.follow(app.player.car.body);
 
     app._competitors = app.game.add.group();
 
-    for (i=0; i<2*app.game.height; i += 100) {
+    for (var i=0; i<2*app.game.height; i += 100) {
         addHorizontalLines(i);
     }
 
@@ -167,6 +180,8 @@ function update() {
         app.won_send = true;
         app.socket.emit('i_won');
     }
+
+    updatePhaserP2_debug();
 }
 
 function updateText() {
@@ -220,7 +235,5 @@ function drawAxes(){
 }
 
 function render () {
-
     app.game.debug.text('Historical stock price: ' + app.active_segment.toFixed(2), 100, 132, "#666699","16px Verdana");
-
 }

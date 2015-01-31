@@ -28,31 +28,35 @@ Player = function(game) {
     car.wheel_back.body.mass = 4;
     car.wheel_back.body.setCollisionGroup(car.collision_group);
 
-    car.material = game.physics.p2.createMaterial('spriteMaterial');	
+    car.material = game.physics.p2.createMaterial('spriteMaterial');
 	car.wheel_front.body.setMaterial(car.material);
 	car.wheel_back.body.setMaterial(car.material);
 
-    car.spring_front = game.physics.p2.createSpring(car.body, car.wheel_front, 65, 500, 100, null, null, [35,0], null);
-    car.spring_back = game.physics.p2.createSpring(car.body, car.wheel_back, 65, 500, 100, null, null, [-35,0], null);
+    car.spring_front = game.physics.p2.createSpring(car.body, car.wheel_front, 69, 2000, 100, null, null, [30,-5], null);
+    addPhaserP2_debug(car.spring_front.data,"spring");
+    car.spring_back = game.physics.p2.createSpring(car.body, car.wheel_back, 71, 2000, 100, null, null, [-32,-5], null);
+    addPhaserP2_debug(car.spring_back.data,"spring");
     //Spring(world, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB)
 
-    var constraint = game.physics.p2.createPrismaticConstraint(car.body, car.wheel_front, false,[30,0],[0,0],[0,1]);
+    var constraint = game.physics.p2.createPrismaticConstraint(car.body, car.wheel_front, false,[30,-5],[0,0],[0.3,1]);
+    addPhaserP2_debug(constraint,"prismaticConstraint");
     constraint.lowerLimitEnabled = constraint.upperLimitEnabled = true;
     constraint.upperLimit = -1;
     constraint.lowerLimit = -2;    
-    var constraint_1 = game.physics.p2.createPrismaticConstraint(car.body, car.wheel_back, false,[-30,0],[0,0],[0,1]);
+    var constraint_1 = game.physics.p2.createPrismaticConstraint(car.body, car.wheel_back, false,[-30,-5],[0,0],[-0.3,1]);
+    addPhaserP2_debug(constraint_1,"prismaticConstraint");
     constraint_1.lowerLimitEnabled = constraint_1.upperLimitEnabled = true;
     constraint_1.upperLimit = -1;
     constraint_1.lowerLimit = -2;    
 
     game.physics.p2.updateBoundsCollisionGroup();
 
-    crush_trigger = function() {
+    var crush_trigger = function() {
         var ang = this.car.body.body.angle;
         if ((ang <= 180 && ang >= 120) || (ang >= -180 && ang <= -120)) {
             explosion();
         }
-    }
+    };
 
 	return {
 		car: car,
