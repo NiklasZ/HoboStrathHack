@@ -10,9 +10,11 @@ module.exports = function (uid) {
 
             this.fx = position['fx'];
             this.fy = position['fy'];
+            this.fr = position['fr'];
 
             this.bx = position['bx'];
             this.by = position['by'];
+            this.br = position['br'];
         }
     };
 };

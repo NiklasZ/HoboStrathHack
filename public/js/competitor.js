@@ -21,11 +21,11 @@ Competitor = function(group) {
             this.car.body.position.y = data.y;
             this.car.body.rotation = data.r;
 
-            group.game.debug.pixel( data.x, data.y, 'rgba(255,125,0,1)' ) ;
+            //group.game.debug.pixel( data.x, data.y, 'rgba(255,125,0,1)' ) ;
 
             this.car.wheel_front.position.x = data.fx;
             this.car.wheel_front.position.y = data.fy;
-            this.car.wheel_back.rotation = data.br;
+            this.car.wheel_front.rotation = data.br;
 
             this.car.wheel_back.position.x = data.bx;
             this.car.wheel_back.position.y = data.by;

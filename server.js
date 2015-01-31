@@ -121,8 +121,10 @@ setInterval(function() {
             r: player.r,
             fx: player.fx,
             fy: player.fy,
+            fr: player.fr,
             bx: player.bx,
-            by: player.by
+            by: player.by,
+            br: player.br
         };
     });
     io.sockets.emit('broadcast_positions', data);
