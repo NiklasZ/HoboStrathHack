@@ -7,7 +7,8 @@ app = {
     competitors: {},
     active_segment: 0,
     explosion_sound: null,
-    won_send: false
+    won_send: false,
+    debug: {springs: [], constraints: []}
 };
 
 function setCookie(cname, cvalue, exdays) {
@@ -101,6 +102,8 @@ function preload() {
 
     app.game.load.audio('ambient','assets/explosion.ogg');
     app.game.load.audio('theme','assets/theme.ogg');
+
+    initPhaserP2_debug();
 }
 
 function create() {
@@ -128,13 +131,13 @@ function create() {
 
     app._competitors = app.game.add.group();
 
-    for (i=0; i<2*app.game.height; i += 100) {
+    for (var i=0; i<2*app.game.height; i += 100) {
         addHorizontalLines(i);
     }
 
     app.explosion_sound = app.game.add.audio('ambient', 1, false);
     app.theme_sound = app.game.add.audio('theme', 1, true);
-    app.theme_sound.play('',0,1,true);
+    //app.theme_sound.play('',0,1,true);
 
     //app.stockChangeText = app.game.add.text(app.player.car.body.body.x+150, 150, "suuuper bonus!", { font: "30px Arial", fill: "#ff0044", align: "center" });
     //app.stockChangeText.anchor.setTo(0.5, 0.5);
@@ -177,6 +180,8 @@ function update() {
         app.won_send = true;
         app.socket.emit('i_won');
     }
+
+    updatePhaserP2_debug();
 }
 
 function updateText() {
