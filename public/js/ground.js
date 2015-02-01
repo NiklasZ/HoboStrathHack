@@ -87,17 +87,21 @@ Ground = function (game) {
 
         addSegment: function (position, height, raw, type) {
             var segmentShape = this.getPolygon(this.last_height, height, position);
+            var collisionPoly = this.getPolygon(this.last_height, height, position);
+            collisionPoly[1] = collisionPoly[3] = app.height + 500;
             this.last_height = height;
 
             var segment = this._ground.create(0, 0);
+            segment.visibility = false;
             segment.anchor.setTo(0.5, 0.5);
             this.game.physics.p2.enable(segment, true, true);
 
-            segment.body.addPolygon({}, segmentShape);
+            segment.body.addPolygon({}, collisionPoly);
             segment.body.kinematic = true;
             segment.body.setCollisionGroup(this.collision_group);
             segment.body.fixedRotation = true;
             segment.body.data.gravityScale = 0;
+            segment.body.debug = false;
             segment.body.collideWorldBounds = false;
 
             app.player.car_collides_with(this.collision_group, segment);
