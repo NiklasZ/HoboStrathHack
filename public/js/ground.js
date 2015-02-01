@@ -123,8 +123,8 @@ Ground = function(game) {
             //Slippery settings
             else if(type == segmentTypes.SPEEDUP){
                 console.log("Made speedup at ", position);
-                contactMaterial.friction = 2;
-                contactMaterial.surfaceVelocity = 2;
+                contactMaterial.friction = 4;
+                //contactMaterial.surfaceVelocity = 2;
                 colour = 0xFF6600;
             }
 
