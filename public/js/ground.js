@@ -1,4 +1,4 @@
-var segmentTypes = {NORMAL: 0, SLIPPERY: 1, BOUNCY: 2};
+var segmentTypes = {NORMAL: 0, SPEEDUP: 1, BOUNCY: 2};
 Ground = function(game) {
     var obj = {
     	SEGMENT_LENGTH: 100,
@@ -121,10 +121,10 @@ Ground = function(game) {
             }
 
             //Slippery settings
-            else if(type == segmentTypes.SLIPPERY){
-                console.log("Made slippery at ", position);
-                contactMaterial.friction = 1;
-                contactMaterial.surfaceVelocity = 5000;
+            else if(type == segmentTypes.SPEEDUP){
+                console.log("Made speedup at ", position);
+                contactMaterial.friction = 2;
+                contactMaterial.surfaceVelocity = 2;
                 colour = 0xFF6600;
             }
 
@@ -136,11 +136,6 @@ Ground = function(game) {
                 contactMaterial.restitution = 1.5; //Bounciness
                 colour = 0xFF33CC;
             }
-                            
-		    
-
-
-
 
             //contactMaterial.stiffness = 1e7;    // Stiffness of the resulting ContactEquation that this ContactMaterial generate.
             //contactMaterial.relaxation = 3;     // Relaxation of the resulting ContactEquation that this ContactMaterial generate.

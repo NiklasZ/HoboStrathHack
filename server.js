@@ -4,7 +4,7 @@ var consolidate = require('consolidate');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var app = express();
-var segmentTypes = {NORMAL: 0, SLIPPERY: 1, BOUNCY: 2};
+var segmentTypes = {NORMAL: 0, SPEEDUP: 1, BOUNCY: 2};
 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -151,7 +151,7 @@ function generateTrackType(slope){
     var choice;
 
     if(slope > 0 && rand < 0.1)
-        choice = segmentTypes.SLIPPERY;
+        choice = segmentTypes.SPEEDUP;
     else if(slope < 0 && rand < 0.1)
         choice = segmentTypes.BOUNCY;
     else
