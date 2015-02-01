@@ -132,8 +132,8 @@ Ground = function(game) {
             else if(type == segmentTypes.BOUNCY){
                 console.log("Made bouncy at ", position);
                 contactMaterial.friction = 3;
-                contactMaterial.relaxation = 0.05;
-                contactMaterial.restitution = 2.5;
+                contactMaterial.relaxation = 0.25; //Elasticity, I think?
+                contactMaterial.restitution = 1.5; //Bounciness
                 colour = 0xFF33CC;
             }
                             

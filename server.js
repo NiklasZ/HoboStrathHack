@@ -100,7 +100,7 @@ io.on('connection', function (socket) {
                 var p2 = (slope + rand + 100) / 200;
                 var slopeChangeSize = 100;
                 var slopeChange = Math.random() * (slopeChangeSize - (slopeChangeSize * (p + p2)));
-                slopeTypes[data] = generateTrackType();
+                slopeTypes[data] = generateTrackType(slope);
 
                 heights[data] = previousHeight + slope + slopeChange + rand;
                 if(heights[data] > 400)  { heights[data] = 400;  }
@@ -146,13 +146,13 @@ setInterval(function() {
 }, 15);
 
 //Selects random track
-function generateTrackType(){
+function generateTrackType(slope){
     var rand = Math.random();
     var choice;
 
-    if(rand < 0.08)
+    if(slope > 0 && rand < 0.1)
         choice = segmentTypes.SLIPPERY;
-    else if(rand < 0.16)
+    else if(slope < 0 && rand < 0.1)
         choice = segmentTypes.BOUNCY;
     else
         choice = segmentTypes.NORMAL;
