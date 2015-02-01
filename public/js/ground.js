@@ -133,7 +133,7 @@ Ground = function(game) {
                 console.log("Made bouncy at ", position);
                 contactMaterial.friction = 3;
                 contactMaterial.relaxation = 0.05;
-                contactMaterial.restitution = 2;
+                contactMaterial.restitution = 2.5;
                 colour = 0xFF33CC;
             }
                             
