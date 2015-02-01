@@ -100,11 +100,12 @@ io.on('connection', function (socket) {
                 var p2 = (slope + rand + 100) / 200;
                 var slopeChangeSize = 100;
                 var slopeChange = Math.random() * (slopeChangeSize - (slopeChangeSize * (p + p2)));
-                slopeTypes[data] = generateTrackType(slope);
 
                 heights[data] = previousHeight + slope + slopeChange + rand;
                 if(heights[data] > 400)  { heights[data] = 400;  }
                 if(heights[data] < -150) { heights[data] = -150; }
+
+                slopeTypes[data] = generateTrackType(heights[data] - previousHeight);
                 //console.log(slopeTypes[data]);
             }
             socket.emit('data', {"height": heights[data], "pos": data, "raw": heights[data], "type":slopeTypes[data]})
