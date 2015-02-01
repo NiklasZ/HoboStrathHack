@@ -150,9 +150,9 @@ function generateTrackType(){
     var rand = Math.random();
     var choice;
 
-    if(rand < 0.1)
+    if(rand < 0.05)
         choice = segmentTypes.SLIPPERY;
-    else if(rand < 0.3)
+    else if(rand < 0.10)
         choice = segmentTypes.BOUNCY;
     else
         choice = segmentTypes.NORMAL;

@@ -13,10 +13,12 @@ Ground = function(game) {
         active_segment: null,
 
     	segments: [],
+        materials: [],
         polygons: [],
         gridLines: [],
         collision_group: game.physics.p2.createCollisionGroup(),
 
+        //Generates heights in offline mode
         getHeight: function(pos) {
             var max = 120, min = -30;
             return Math.random()*(max - min) + min;    
@@ -27,7 +29,7 @@ Ground = function(game) {
             while(position - app.player.car.body.x < 2000){
                 this.addLine(position);
                 if(!app.online){
-                    this.addSegment(position, this.getHeight(position),this.getHeight(position));
+                    this.addSegment(position, this.getHeight(position),this.getHeight(position), NORMAL);
                 }else{
                     var i = position / this.SEGMENT_LENGTH;
                     if(this.emmited < i){
@@ -45,6 +47,8 @@ Ground = function(game) {
                 this.polygons.shift();
                 this.gridLines[0].destroy();
                 this.gridLines.shift();
+                //this.materials[0].destroy();
+                this.materials.shift();
             }
 
         },
@@ -84,6 +88,7 @@ Ground = function(game) {
         },
 
     	addSegment: function(position, height, raw, type) {
+            //console.log(this.materials);
     		var segmentShape = this.getPolygon(this.last_height, height, position);
     		this.last_height = height;
 
@@ -100,21 +105,26 @@ Ground = function(game) {
     
     		app.player.car_collides_with(this.collision_group, segment);
 
-			segment.body.setMaterial(this.material);
-		    var contactMaterial = this.game.physics.p2.createContactMaterial(app.player.car.material, this.material);
+            var i = position/this.SEGMENT_LENGTH;
+            this.materials.push(obj.game.physics.p2.createMaterial('segment'));
+
+			segment.body.setMaterial(this.materials[i]);
+		    var contactMaterial = this.game.physics.p2.createContactMaterial(app.player.car.material, this.materials[i]); //
 
             //Type choosing:
 
             //Default
-            contactMaterial.friction = 3;     // Friction to use in the contact of these two materials.
-            contactMaterial.restitution = 0.3;  // Restitution (i.e. how bouncy it is!) to use in the contact of these two materials.
-            var colour = 0x1166ee;
+            if(type == segmentTypes.NORMAL){
+                contactMaterial.friction = 3;     // Friction to use in the contact of these two materials.
+                contactMaterial.restitution = 0.3;  // Restitution (i.e. how bouncy it is!) to use in the contact of these two materials.
+                var colour = 0x1166ee;
+            }
 
             //Slippery settings
-            if(type == segmentTypes.SLIPPERY){
+            else if(type == segmentTypes.SLIPPERY){
                 console.log("Made slippery at ", position);
                 contactMaterial.friction = 1;
-                contactMaterial.surfaceVelocity = 100000;
+                contactMaterial.surfaceVelocity = 5000;
                 colour = 0xFF6600;
             }
 
@@ -122,8 +132,8 @@ Ground = function(game) {
             else if(type == segmentTypes.BOUNCY){
                 console.log("Made bouncy at ", position);
                 contactMaterial.friction = 3;
-                contactMaterial.relaxation = 0;
-                contactMaterial.restitution = 0;
+                contactMaterial.relaxation = 0.05;
+                contactMaterial.restitution = 2;
                 colour = 0xFF33CC;
             }
                             
@@ -147,7 +157,7 @@ Ground = function(game) {
     	}
     };
 	        
-	obj.material = obj.game.physics.p2.createMaterial('worldMaterial');
+	//obj.material = obj.game.physics.p2.createMaterial('worldMaterial');
 
     return obj;
 };
