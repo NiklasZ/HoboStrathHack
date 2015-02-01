@@ -4,6 +4,7 @@ var consolidate = require('consolidate');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var app = express();
+var segmentTypes = {NORMAL: 0, SLIPPERY: 1, BOUNCY: 2};
 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -27,6 +28,7 @@ var Player = require('./player');
 
 var players = {};
 var heights = {};
+var slopeTypes = {};
 
 function getPlayer(uid) {
     if(!players[uid]){
@@ -98,12 +100,14 @@ io.on('connection', function (socket) {
                 var p2 = (slope + rand + 100) / 200;
                 var slopeChangeSize = 100;
                 var slopeChange = Math.random() * (slopeChangeSize - (slopeChangeSize * (p + p2)));
+                slopeTypes[data] = generateTrackType();
 
                 heights[data] = previousHeight + slope + slopeChange + rand;
                 if(heights[data] > 400)  { heights[data] = 400;  }
                 if(heights[data] < -150) { heights[data] = -150; }
+                //console.log(slopeTypes[data]);
             }
-            socket.emit('data', {"height": heights[data], "pos": data, "raw": heights[data]})
+            socket.emit('data', {"height": heights[data], "pos": data, "raw": heights[data], "type":slopeTypes[data]})
         });
 
         socket.on('send_name', function(data) {
@@ -140,3 +144,18 @@ setInterval(function() {
     });
     io.sockets.emit('broadcast_positions', data);
 }, 15);
+
+//Selects random track
+function generateTrackType(){
+    var rand = Math.random();
+    var choice;
+
+    if(rand < 0.1)
+        choice = segmentTypes.SLIPPERY;
+    else if(rand < 0.3)
+        choice = segmentTypes.BOUNCY;
+    else
+        choice = segmentTypes.NORMAL;
+
+    return choice;
+}
