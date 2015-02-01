@@ -1,3 +1,4 @@
+var segmentTypes = {NORMAL: 0, SLIPPERY: 1, BOUNCY: 2};
 Ground = function(game) {
     var obj = {
     	SEGMENT_LENGTH: 100,
@@ -58,13 +59,13 @@ Ground = function(game) {
 	        ];
     	},
 
-        drawPoly: function(pts) {
+        drawPoly: function(pts, colour) {
             poly = new Phaser.Polygon([ new Phaser.Point(pts[0]-1, pts[1]+1),
                                         new Phaser.Point(pts[2]+1, pts[3]+1),
                                         new Phaser.Point(pts[4]+1, pts[5]-1),
                                         new Phaser.Point(pts[6]-1, pts[7]-1) ]);
             graphics = this.game.add.graphics(0, 0),
-            graphics.beginFill(0x1166ee);
+            graphics.beginFill(colour);
             graphics.drawPolygon(poly.points);
             graphics.endFill();
             this.polygons.push(graphics);
@@ -82,7 +83,7 @@ Ground = function(game) {
             this.gridLines.push(graphics);
         },
 
-    	addSegment: function(position, height, raw) {
+    	addSegment: function(position, height, raw, type) {
     		var segmentShape = this.getPolygon(this.last_height, height, position);
     		this.last_height = height;
 
@@ -101,8 +102,36 @@ Ground = function(game) {
 
 			segment.body.setMaterial(this.material);
 		    var contactMaterial = this.game.physics.p2.createContactMaterial(app.player.car.material, this.material);
-		    contactMaterial.friction = 3;     // Friction to use in the contact of these two materials.
+
+            //Type choosing:
+
+            //Default
+            contactMaterial.friction = 3;     // Friction to use in the contact of these two materials.
             contactMaterial.restitution = 0.3;  // Restitution (i.e. how bouncy it is!) to use in the contact of these two materials.
+            var colour = 0x1166ee;
+
+            //Slippery settings
+            if(type == segmentTypes.SLIPPERY){
+                console.log("Made slippery at ", position);
+                contactMaterial.friction = 1;
+                contactMaterial.surfaceVelocity = 100000;
+                colour = 0xFF6600;
+            }
+
+            //Bouncy settings
+            else if(type == segmentTypes.BOUNCY){
+                console.log("Made bouncy at ", position);
+                contactMaterial.friction = 3;
+                contactMaterial.relaxation = 0;
+                contactMaterial.restitution = 0;
+                colour = 0xFF33CC;
+            }
+                            
+		    
+
+
+
+
             //contactMaterial.stiffness = 1e7;    // Stiffness of the resulting ContactEquation that this ContactMaterial generate.
             //contactMaterial.relaxation = 3;     // Relaxation of the resulting ContactEquation that this ContactMaterial generate.
             //contactMaterial.frictionStiffness = 1e7;    // Stiffness of the resulting FrictionEquation that this ContactMaterial generate.
@@ -114,7 +143,7 @@ Ground = function(game) {
             segment.raw_value = raw;
 		    this.segments.push(segment);
             this.last_position = position + this.SEGMENT_LENGTH;
-            this.drawPoly(segmentShape);
+            this.drawPoly(segmentShape,colour);
     	}
     };
 	        
