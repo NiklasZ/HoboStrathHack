@@ -41,7 +41,7 @@ $(function(){
 
         app.socket.on('data', function(msg) {
             console.log('Got data for ', msg);
-            app.ground.addSegment(msg.pos * app.ground.SEGMENT_LENGTH, msg.height, msg.raw);
+            app.ground.addSegment(msg.pos * app.ground.SEGMENT_LENGTH, msg.height, msg.raw, msg.type);
         });
 
         app.socket.on('broadcast_positions', function(msg) {
