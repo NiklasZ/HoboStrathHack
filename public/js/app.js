@@ -250,6 +250,10 @@ function explosion() {
     
 
 }
+
+function reset(){
+    location.reload();
+}
 function drawAxes(){
     
 }

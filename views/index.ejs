@@ -28,7 +28,8 @@
           <form id="checkout" method="post" action="/checkout">
             <h2>Rotten luck! Maybe investing in some stocks might save you next time...</h2>
             <div id="dropin"></div>
-            <input id="pay" type="submit" value="Pay $10"/>
+            <input id="pay" type="submit" class="btn btn-success btn-lg" value="Pay $10"/>OR...
+            <a class="btn btn-success btn-lg" id="replay" onclick="reset()">Replay!</a>
           </form>
           <div id="win"></div>
         </div>

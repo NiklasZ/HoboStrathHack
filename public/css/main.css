@@ -77,6 +77,14 @@ strong.money{
 
 }
 
+#pay{
+	margin-right: 10px;
+}
+
+#replay{
+	margin-left: 10px;
+}
+
 #dropin {
 	width: 40%;
 	margin: 0 auto;
