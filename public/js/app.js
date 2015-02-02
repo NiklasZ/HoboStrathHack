@@ -39,7 +39,7 @@ $(function(){
             console.log('Connected to the server');
         });
 
-        app.socket.on('data', function(msg) {
+        app.socket.on('data', function(msg) {no
             console.log('Got data for ', msg);
             app.ground.addSegment(msg.pos * app.ground.SEGMENT_LENGTH, msg.height, msg.raw, msg.type);
         });
