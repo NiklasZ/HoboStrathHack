@@ -29,7 +29,7 @@ Ground = function (game) {
             while (position - app.player.car.body.x < 2000) {
                 this.addLine(position);
                 if (!app.online) {
-                    this.addSegment(position, this.getHeight(position), this.getHeight(position), NORMAL);
+                    this.addSegment(position, this.getHeight(position), this.getHeight(position), segmentTypes.NORMAL);
                 } else {
                     var i = position / this.SEGMENT_LENGTH;
                     if (this.emmited < i) {
