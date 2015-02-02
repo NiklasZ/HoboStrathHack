@@ -4,7 +4,7 @@ var consolidate = require('consolidate');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var app = express();
-var segmentTypes = {NORMAL: 0, SLIPPERY: 1, BOUNCY: 2};
+var segmentTypes = {NORMAL: 0, SPEEDUP: 1, BOUNCY: 2};
 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -95,16 +95,17 @@ io.on('connection', function (socket) {
                 var previousHeight2 = heights[data-2] ? heights[data-2] : 200.1;
                 var slope = previousHeight - previousHeight2;
 
-                var p = (previousHeight + 100)/400;
+                var p = (previousHeight + 50)/300;
                 var rand = Math.random() * 300 - 150;
                 var p2 = (slope + rand + 100) / 200;
                 var slopeChangeSize = 100;
                 var slopeChange = Math.random() * (slopeChangeSize - (slopeChangeSize * (p + p2)));
-                slopeTypes[data] = generateTrackType();
 
                 heights[data] = previousHeight + slope + slopeChange + rand;
-                if(heights[data] > 400)  { heights[data] = 400;  }
-                if(heights[data] < -150) { heights[data] = -150; }
+                if(heights[data] > 500)  { heights[data] = 500;  }
+                if(heights[data] < -100) { heights[data] = -100; }
+
+                slopeTypes[data] = generateTrackType(heights[data] - previousHeight);
                 //console.log(slopeTypes[data]);
             }
             socket.emit('data', {"height": heights[data], "pos": data, "raw": heights[data], "type":slopeTypes[data]})
@@ -146,13 +147,13 @@ setInterval(function() {
 }, 15);
 
 //Selects random track
-function generateTrackType(){
+function generateTrackType(slope){
     var rand = Math.random();
     var choice;
 
-    if(rand < 0.08)
-        choice = segmentTypes.SLIPPERY;
-    else if(rand < 0.16)
+    if(slope > 0 && rand < 0.1)
+        choice = segmentTypes.SPEEDUP;
+    else if(slope < 0 && rand < 0.1)
         choice = segmentTypes.BOUNCY;
     else
         choice = segmentTypes.NORMAL;
