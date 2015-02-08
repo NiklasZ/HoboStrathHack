@@ -46,6 +46,10 @@ $(function(){
             $(this).addClass('active');
         }
     });
+
+    $('.js-repeat').click(function () {
+        reset();
+    });
     
     if(document.domain){
         app.online = true;
