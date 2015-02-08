@@ -33,9 +33,11 @@ Ground = function (game) {
                 var startX = index * this.SEGMENT_LENGTH;
                 if(!this.heights[index]){
                     if (!app.online) {
+                        this.addLine(startX);
                         this.addSegment(startX, this.getHeight(index), this.getHeight(index), segmentTypes.NORMAL);
                     } else {
                         if (this.emmited < index) {
+                            this.addLine(startX);
                             console.log('Emitting get_height with', index);
                             this.emmited = index;
                             app.socket.emit('get_height', index);
