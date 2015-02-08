@@ -223,7 +223,7 @@ function crush_trigger() {
     if ((ang <= 180 && ang >= 120) || (ang >= -180 && ang <= -120)) {
         // Destroy one life wheel
         if(app.player.life.length > 0){
-            var anim=app.game.add.sprite(1320 - 50*app.player.life.length, 60, 'boom');
+            var anim=app.game.add.sprite(app.player.life[0].x - 30, 60, 'boom');
             anim.fixedToCamera = true;
             anim.animations.add('explode');
             anim.animations.play('explode',60,false);

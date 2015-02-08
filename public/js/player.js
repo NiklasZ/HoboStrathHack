@@ -137,7 +137,7 @@ Player = function (game) {
         addLives: function () {
             var toAdd = 3 - this.life.length;
             for (var i = 0; i < toAdd; i++) {
-                var sprite = game.add.sprite(1200 + i * 50, 90, 'wheel');
+                var sprite = game.add.sprite(app.width - 200 + i * 50, 90, 'wheel');
                 sprite.fixedToCamera = true;
                 this.life.push(sprite);
             }
