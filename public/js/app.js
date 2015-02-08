@@ -83,6 +83,7 @@ $(function(){
             app.player.isDead = true;
             app.overlay.trigger('show');
             $("#checkout").hide();
+            $("#win").show();
 
             if(msg == app.sid){
                 $("#win .msg").html('You won!');
@@ -257,6 +258,9 @@ function explosion() {
         //app.player.car.body.destroy();
         app.player.isDead = true;
         app.overlay.trigger('show');
+        $("#checkout").show();
+        $("#win").hide();
+
     },600);
     
 
