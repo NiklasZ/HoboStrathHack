@@ -7,48 +7,45 @@ Ground = function (game) {
 
         game: game,
         _ground: game.add.group(),
-        last_height: 200,
-        last_position: 0,
+        heights: {},
         emmited: -1,
         active_segment: null,
 
-        segments: [],
+        segments: {},
         materials: [],
         polygons: [],
         gridLines: [],
         collision_group: game.physics.p2.createCollisionGroup(),
 
         //Generates heights in offline mode
-        getHeight: function (pos) {
+        getHeight: function (i) {
             var max = 120, min = -30;
-            return Math.random() * (max - min) + min;
+            this.heights[i] = Math.random() * (max - min) + min;
+            return this.heights[i];
         },
 
         updateSegments: function () {
-            var position = this.last_position;
-            while (position - app.player.car.body.x < 2000) {
-                this.addLine(position);
-                if (!app.online) {
-                    this.addSegment(position, this.getHeight(position), this.getHeight(position), segmentTypes.NORMAL);
-                } else {
-                    var i = position / this.SEGMENT_LENGTH;
-                    if (this.emmited < i) {
-                        console.log('Emitting get_height with', i);
-                        this.emmited = i;
-                        app.socket.emit('get_height', i);
-                    }
-                }
-                position += this.SEGMENT_LENGTH;
-            }
-            if (this.segments[0] && app.player.car.body.x - this.segments[0].x > 2000) {
-                this.segments[0].destroy();
-                this.segments.shift();
-                this.polygons[0].destroy();
-                this.polygons.shift();
-                this.gridLines[0].destroy();
-                this.gridLines.shift();
-            }
+            var x = app.player.car.body.x - 2000;
+            var to = app.player.car.body.x + 2000;
 
+            while(x < to){
+                var index = Math.floor(x / this.SEGMENT_LENGTH);
+                var startX = index * this.SEGMENT_LENGTH;
+                if(!this.heights[index]){
+                    if (!app.online) {
+                        this.addSegment(startX, this.getHeight(index), this.getHeight(index), segmentTypes.NORMAL);
+                    } else {
+                        if (this.emmited < index) {
+                            console.log('Emitting get_height with', index);
+                            this.emmited = index;
+                            app.socket.emit('get_height', index);
+                        }
+                    }
+                }else if(!this.segments[index]){
+                    this.addSegment(startX, this.heights[index], this.heights[index], segmentTypes.NORMAL);
+                }
+                x += this.SEGMENT_LENGTH;
+            }
         },
 
         getPolygon: function (last_height, height, position) {
@@ -86,10 +83,12 @@ Ground = function (game) {
         },
 
         addSegment: function (position, height, raw, type) {
-            var segmentShape = this.getPolygon(this.last_height, height, position);
-            var collisionPoly = this.getPolygon(this.last_height, height, position);
+            var index = Math.floor(position / this.SEGMENT_LENGTH);
+            var lastHeight = this.heights[index - 1] ? this.heights[index - 1] : 200;
+            this.heights[index] = height;
+            var segmentShape = this.getPolygon(lastHeight, height, position);
+            var collisionPoly = this.getPolygon(lastHeight, height, position);
             collisionPoly[1] = collisionPoly[3] = app.height + 500;
-            this.last_height = height;
 
             var segment = this._ground.create(0, 0);
             segment.visibility = false;
@@ -147,8 +146,7 @@ Ground = function (game) {
             //game.physics.p2.updateBoundsCollisionGroup();
 
             segment.raw_value = raw;
-            this.segments.push(segment);
-            this.last_position = position + this.SEGMENT_LENGTH;
+            this.segments[index] = segment;
             this.drawPoly(segmentShape, colour);
         }
     };

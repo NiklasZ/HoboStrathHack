@@ -79,7 +79,8 @@ $(function(){
 function init() {
     $('.info-board').toggle("slide", { direction: "left" }, 700);
     $('.start-menu').hide();
-    $('.overlay').overlay();
+    app.overlay = $('.overlay');
+    app.overlay.overlay();
 
     if(app.online){
         var name = $('#playername').val();
@@ -147,44 +148,37 @@ function create() {
 }
 
 function update() {
-    if (app.arrows.left.isDown) {
-        app.player.accelerate_car(-4);
-    }
-    if (app.arrows.right.isDown) {
-        app.player.accelerate_car(4);
-    }
-    if (app.spaceKey.isDown) {
-        app.player.accelerate_car(0);
-    }
-
-    
-    app.ground.updateSegments();
-    for (var i = 0; i < app.ground.segments.length; i++) {
-        if(app.player.car.body.x >= app.ground.segments[i].x && app.player.car.body.x <=  app.ground.segments[i].x+100){
-            app.active_segment = app.ground.segments[i].raw_value;
-            //console.log(app.ground.segments[i].raw_value);
-            break;
-        }
-    };
-
-    $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
-    if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
+    var index = Math.floor(app.player.car.body.x / app.ground.SEGMENT_LENGTH);
+    var active_segment = app.ground.segments[index];
+    app.active_segment = active_segment ? active_segment.raw_value : 0;
 
     if(!app.player.isDead){
+        if (app.arrows.left.isDown) {
+            app.player.accelerate_car(-4);
+        }
+        if (app.arrows.right.isDown) {
+            app.player.accelerate_car(4);
+        }
+        if (app.spaceKey.isDown) {
+            app.player.accelerate_car(0);
+        }
+
+        if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
+        $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
+
         app.player.send_car_position();
+        app.player.car.body.body.onEndContact.add(crush_trigger,this);
+
+        if(app.online && app.player.car.body.x > 19000 && !app.won_send){
+            console.log('I won');
+            app.won_send = true;
+            app.socket.emit('i_won');
+        }
     }
 
     app.ground.updateSegments();
     updateText();
-
-    if(app.online && app.player.car.body.x > 19000 && !app.won_send){
-        console.log('I won');
-        app.won_send = true;
-        app.socket.emit('i_won');
-    }
-
     updatePhaserP2_debug();
-    app.player.car.body.body.onEndContact.add(crush_trigger,this);
 }
 
 function updateText() {
@@ -233,7 +227,6 @@ function crush_trigger() {
 
         // Die or respawn
         if (app.player.life.length <= 0) {
-            app.player.isDead = true;
             explosion();
         } else {
             app.player.reborn_player();
@@ -254,14 +247,16 @@ function explosion() {
         //app.player.car.wheel_front.destroy();
         //app.player.car.wheel_back.destroy();
         //app.player.car.body.destroy();
-        $("#help").click();
+        app.player.isDead = true;
+        app.overlay.trigger('show');
     },600);
     
 
 }
 
 function reset(){
-    location.reload();
+    app.overlay.trigger('hide');
+    app.player.reset();
 }
 function drawAxes(){
     
