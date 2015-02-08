@@ -61,6 +61,7 @@ Player = function(game) {
 		car: car,
 		game: game,
         life: life,
+        isDead: false,
 
 		accelerate_car: function(a) {
             var angVel = this.car.wheel_back.body.angularVelocity;
@@ -89,8 +90,8 @@ Player = function(game) {
 
             this.car.wheel_front.body.angularForce = 0;
             this.car.wheel_front.body.angularVelocity = 0;
-            this.car.wheel_front.body.velocity.x = 0
-            this.car.wheel_front.body.velocity.y = 0
+            this.car.wheel_front.body.velocity.x = 0;
+            this.car.wheel_front.body.velocity.y = 0;
             this.car.wheel_front.body.y = this.car.body.body.y + 20;
             this.car.wheel_front.body.x = this.car.body.body.x + 30;
 

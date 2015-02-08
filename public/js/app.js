@@ -137,7 +137,7 @@ function create() {
 
     app.explosion_sound = app.game.add.audio('ambient', 1, false);
     app.theme_sound = app.game.add.audio('theme', 1, true);
-    app.theme_sound.play('',0,1,true);
+    app.theme_sound.play('',0,0.5,true);
 
     //app.stockChangeText = app.game.add.text(app.player.car.body.body.x+150, 150, "suuuper bonus!", { font: "30px Arial", fill: "#ff0044", align: "center" });
     //app.stockChangeText.anchor.setTo(0.5, 0.5);
@@ -170,7 +170,9 @@ function update() {
     $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
     if(app.player.car.body.x>app.score) app.score = app.player.car.body.x;
 
-    app.player.send_car_position();
+    if(!app.player.isDead){
+        app.player.send_car_position();
+    }
 
     app.ground.updateSegments();
     updateText();
@@ -191,14 +193,16 @@ function updateText() {
 }
 
 function addHorizontalLines(position) {
-    gridLine = new Phaser.Polygon([ new Phaser.Point(0, position+1),
-                                    new Phaser.Point(19200, position+1),
-                                    new Phaser.Point(19200, position),
-                                    new Phaser.Point(0, position) ]);
-        graphics = app.game.add.graphics(0, 0),
-        graphics.beginFill(0x000000, 0.4);
-        graphics.drawPolygon(gridLine.points);
-        graphics.endFill();
+    var gridLine = new Phaser.Polygon([
+        new Phaser.Point(0, position+1),
+        new Phaser.Point(19200, position+1),
+        new Phaser.Point(19200, position),
+        new Phaser.Point(0, position)
+    ]);
+    var graphics = app.game.add.graphics(0, 0);
+    graphics.beginFill(0x000000, 0.4);
+    graphics.drawPolygon(gridLine.points);
+    graphics.endFill();
 }
 
 function show_competitors(data) {
@@ -217,14 +221,19 @@ function show_competitors(data) {
 function crush_trigger() {
     var ang = app.player.car.body.body.angle;
     if ((ang <= 180 && ang >= 120) || (ang >= -180 && ang <= -120)) {
-        var anim=app.game.add.sprite(1320 - 50*app.player.life.length, 60, 'boom');
-        anim.fixedToCamera = true;
-        anim.animations.add('explode');
-        anim.animations.play('explode',60,false);
-        app.player.life[0].destroy();
-        app.explosion_sound.play('',0,1,false);
+        // Destroy one life wheel
+        if(app.player.life.length > 0){
+            var anim=app.game.add.sprite(1320 - 50*app.player.life.length, 60, 'boom');
+            anim.fixedToCamera = true;
+            anim.animations.add('explode');
+            anim.animations.play('explode',60,false);
+            app.player.life[0].destroy();
+            app.explosion_sound.play('',0,1,false);
+        }
 
-        if (app.player.life.length <= 1) {
+        // Die or respawn
+        if (app.player.life.length <= 0) {
+            app.player.isDead = true;
             explosion();
         } else {
             app.player.reborn_player();
@@ -242,9 +251,9 @@ function explosion() {
     app.explosion_sound.play('',0,1,false);
 
     setTimeout(function(){
-        app.player.car.wheel_front.destroy();
-        app.player.car.wheel_back.destroy();
-        app.player.car.body.destroy();
+        //app.player.car.wheel_front.destroy();
+        //app.player.car.wheel_back.destroy();
+        //app.player.car.body.destroy();
         $("#help").click();
     },600);
     
