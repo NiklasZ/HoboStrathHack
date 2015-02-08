@@ -119,6 +119,7 @@ io.on('connection', function (socket) {
         socket.on('i_won', function() {
             console.log('Player #%s (%s) has won!', player.uid, player.name);
             socket.broadcast.emit('he_won', player.uid);
+            socket.emit('he_won', player.uid);
         });
 
         socket.on('send_position', function(data) {

@@ -80,17 +80,15 @@ $(function(){
 
         app.socket.on('he_won', function(msg) {
             console.log('Someone won', msg);
-            app.player.car.wheel_front.destroy();
-            app.player.car.wheel_back.destroy();
-            app.player.car.body.destroy();
-            $("#help").click();
+            app.player.isDead = true;
+            app.overlay.trigger('show');
             $("#checkout").hide();
 
             if(msg == app.sid){
-                $("#win").html('You won!');                
+                $("#win .msg").html('You won!');
             }else{
                 var name = app.competitors[msg].name || '#' + msg;
-                $("#win").html(name + ' won!'); 
+                $("#win .msg").html(name + ' won!');
             }   
         });
     }  
