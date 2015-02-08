@@ -127,8 +127,10 @@ function create() {
     app.player = new Player(app.game);
     app.player.name = $('#playername').val();
     app.ground = new Ground(app.game);
-    app.ground.updateSegments(); 
+    app.ground.updateSegments();
     app.game.camera.follow(app.player.car.body);
+
+    app.player.car.body.body.onEndContact.add(crush_trigger);
 
     app._competitors = app.game.add.group();
 
@@ -167,7 +169,6 @@ function update() {
         $('#info div:nth-child(2)').text("Distance: "+app.score.toFixed(2)+" m");
 
         app.player.send_car_position();
-        app.player.car.body.body.onEndContact.add(crush_trigger,this);
 
         if(app.online && app.player.car.body.x > 19000 && !app.won_send){
             console.log('I won');
@@ -213,6 +214,8 @@ function show_competitors(data) {
 }
 
 function crush_trigger() {
+    if(app.player.isDead)return;
+
     var ang = app.player.car.body.body.angle;
     if ((ang <= 180 && ang >= 120) || (ang >= -180 && ang <= -120)) {
         // Destroy one life wheel
