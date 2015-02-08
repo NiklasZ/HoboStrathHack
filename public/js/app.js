@@ -148,7 +148,7 @@ function create() {
 
     app._competitors = app.game.add.group();
 
-    for (var i=0; i<2*app.game.height; i += 100) {
+    for (var i=-1000; i<1000; i += 100) {
         addHorizontalLines(i);
     }
 
@@ -193,8 +193,8 @@ function update() {
 function addHorizontalLines(position) {
     var gridLine = new Phaser.Polygon([
         new Phaser.Point(0, position+1),
-        new Phaser.Point(19200, position+1),
-        new Phaser.Point(19200, position),
+        new Phaser.Point(20000, position+1),
+        new Phaser.Point(20000, position),
         new Phaser.Point(0, position)
     ]);
     var graphics = app.game.add.graphics(0, 0);
@@ -264,7 +264,10 @@ function reset(){
     app.overlay.trigger('hide');
     app.player.reset();
     app.theme_sound.play('', 0 , app.music_volume, true);
-    app.score = 0;
+    setTimeout(function(){
+        console.log('Resetting score');
+        app.score = 0;
+    }, 100);
 }
 
 function render () {

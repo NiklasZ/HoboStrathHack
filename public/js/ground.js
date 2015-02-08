@@ -73,10 +73,10 @@ Ground = function (game) {
         },
 
         addLine: function (position) {
-            var gridLine = new Phaser.Polygon([new Phaser.Point(position, 0),
-                new Phaser.Point(position + 1, 0),
-                new Phaser.Point(position + 1, 2 * this.game.height),
-                new Phaser.Point(position, 2 * this.game.height)]);
+            var gridLine = new Phaser.Polygon([new Phaser.Point(position, -1000),
+                new Phaser.Point(position + 1, -1000),
+                new Phaser.Point(position + 1, 1000),
+                new Phaser.Point(position, 1000)]);
             var graphics = this.game.add.graphics(0, 0);
             graphics.beginFill(0x000000, 0.4);
             graphics.drawPolygon(gridLine.points);
