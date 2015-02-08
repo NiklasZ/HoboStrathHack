@@ -30,6 +30,22 @@ $(function(){
     $('#viewport').width(app.width);
     $('.info-board').width(app.width + 6);
     $('#viewport').height(app.height);
+
+    $('.js-volume').each(function () {
+        if(Math.abs($(this).data('volume') - music_volume) < 0.2){
+            $(this).addClass('active');
+        }
+    }).click(function () {
+        if(app.theme_sound){
+            var volume = $(this).data('volume');
+            app.theme_sound.volume = volume;
+            app.music_volume = volume;
+            setCookie('volume', volume);
+
+            $(this).parent().find('.btn').removeClass('active');
+            $(this).addClass('active');
+        }
+    });
     
     if(document.domain){
         app.online = true;
@@ -109,13 +125,11 @@ function preload() {
 
 function create() {
     // adding P2 physics to the game
-    app.game.world.setBounds(0, 0, 19200, 1000);
+    app.game.world.setBounds(0, -1000, 19200, 2000);
     app.game.physics.startSystem(Phaser.Physics.P2JS);
     app.game.physics.p2.restitution = 0.4;
     
     app.game.stage.backgroundColor = '#DDDDDD';
-    
-
     
     // setting gravity
     app.game.physics.p2.gravity.y = 1500;
@@ -130,7 +144,7 @@ function create() {
     app.ground.updateSegments();
     app.game.camera.follow(app.player.car.body);
 
-    app.player.car.body.body.onEndContact.add(crush_trigger);
+    app.player.car.body.body.onBeginContact.add(crush_trigger);
 
     app._competitors = app.game.add.group();
 
@@ -140,13 +154,8 @@ function create() {
 
     app.explosion_sound = app.game.add.audio('ambient', 1, false);
     app.theme_sound = app.game.add.audio('theme', 1, true);
-    app.theme_sound.play('',0,0.5,true);
-
-    //app.stockChangeText = app.game.add.text(app.player.car.body.body.x+150, 150, "suuuper bonus!", { font: "30px Arial", fill: "#ff0044", align: "center" });
-    //app.stockChangeText.anchor.setTo(0.5, 0.5);
-
-    //app._competitors.z = -99;
-    //app._competitors.updateZ();
+    app.music_volume = music_volume;
+    app.theme_sound.play('', 0, app.music_volume, true);
 }
 
 function update() {
@@ -178,13 +187,7 @@ function update() {
     }
 
     app.ground.updateSegments();
-    updateText();
     updatePhaserP2_debug();
-}
-
-function updateText() {
-    //app.stockChangeText.x = app.width-150;
-    //app.stockChangeText.y = 150;
 }
 
 function addHorizontalLines(position) {
@@ -260,9 +263,8 @@ function explosion() {
 function reset(){
     app.overlay.trigger('hide');
     app.player.reset();
-}
-function drawAxes(){
-    
+    app.theme_sound.play('', 0 , app.music_volume, true);
+    app.score = 0;
 }
 
 function render () {

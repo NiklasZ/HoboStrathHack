@@ -26,16 +26,6 @@
         return true;
       });
 
-      overlay.on('click', function(e) {
-        if (e.target.className === overlay.attr('class')) {
-          return overlay.trigger('hide');
-        } else if($(e.target).is('#pay')){
-          return true;
-        } else {
-          return false;
-        }
-      })
-
       $('a[data-overlay-trigger]').on('click', function() {
         overlay.trigger('show');
       });

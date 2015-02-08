@@ -45,11 +45,12 @@ app.get('/', function (req, res) {
     }
 
     var name = req.cookies.uname || '';
+    var volume = req.cookies.volume || 0.5;
 
     var player = getPlayer(uid);
 
     gateway.clientToken.generate({}, function (err, response) {
-        res.render('index', {client_token: response.clientToken, name: name, paid: player.paid ? '$$$' : ''});
+        res.render('index', {client_token: response.clientToken, name: name, volume: volume, paid: player.paid ? '$$$' : ''});
     });
 });
 

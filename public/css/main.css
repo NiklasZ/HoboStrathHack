@@ -1,11 +1,10 @@
+body {
+	padding-top: 60px;
+	background: #E9E9E9;
+}
 
-body { padding-top: 60px;
-	background: #E9E9E9; }
-
-
-.info-board{
+.info-board {
 	position: absolute;
-	z-index: 10;
 	background-color: #666699;
 	border-top-right-radius: 15px;
 	border-top-left-radius: 15px;
@@ -13,28 +12,30 @@ body { padding-top: 60px;
 	z-index: 2;
 }
 
-#info{
+.info-board .btn {
+	background-color: #666699;
+}
+.info-board .btn.active {
+	background-color: #52527a;
+}
+
+.info-board .btn span {
+	color: #FFF;
+	font-size: 19px;
+}
+
+#info {
 	line-height: 70px;
 	height: 100%;
-}
-
-.col-md-3{
 	color: #FFF;
-	right: -380px;
 	font-size: 19px;
-	padding-left: 50px;
-	padding-right: 50px;
 }
 
-strong.money{
+strong.money {
 	color: #FFF;
 	font-size: 18pt;
 }
 
-#info div:first-child{
-	width: 600px;
-	right: -140px;
-}
 .start-menu {
 	position: relative;
 	z-index: 7;
@@ -55,33 +56,32 @@ strong.money{
 	margin-bottom: 10px;
 }
 
-.text{
+.text {
 	position: relative;
 	margin-left: auto;
-  margin-right: auto;
+	margin-right: auto;
 	top: 100px;
 	width: 600px;
 	text-align: center;
 }
 
-#gameDiv{
+#gameDiv {
 	position: absolute;
 	border-radius: 15px;
 	border-color: #3f3f4f;
 	border-style: solid;
-
 }
 
-#help{
+#help {
 	visibility: hidden;
 
 }
 
-#pay{
+#pay {
 	margin-right: 10px;
 }
 
-#replay{
+#replay {
 	margin-left: 10px;
 }
 
