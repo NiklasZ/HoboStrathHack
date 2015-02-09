@@ -14,7 +14,8 @@
     "consolidate": "*",
     "underscore": "*",
     "braintree": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "seedrandom": "*"
   },
   "main": "server.js",
   "engines": {
