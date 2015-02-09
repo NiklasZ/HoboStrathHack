@@ -128,7 +128,7 @@ function preload() {
 
 function create() {
     // adding P2 physics to the game
-    app.game.world.setBounds(0, -1000, 19200, 2000);
+    app.game.world.setBounds(0, -1000, 20000, 2000);
     app.game.physics.startSystem(Phaser.Physics.P2JS);
     app.game.physics.p2.restitution = 0.4;
     
@@ -182,7 +182,7 @@ function update() {
 
         app.player.send_car_position();
 
-        if(app.online && app.player.car.body.x > 19000 && !app.won_send){
+        if(app.online && app.player.car.body.x > 19800 && !app.won_send){
             console.log('I won');
             app.won_send = true;
             app.socket.emit('i_won');
@@ -270,6 +270,7 @@ function reset(){
     app.overlay.trigger('hide');
     app.player.reset();
     app.theme_sound.play('', 0 , app.music_volume, true);
+    app.won_send = false;
     setTimeout(function(){
         console.log('Resetting score');
         app.score = 0;
