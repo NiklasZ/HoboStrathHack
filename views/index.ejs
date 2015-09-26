@@ -78,6 +78,7 @@
       </div>
     </div>
     <script>
+      offline = <%= offline %>;
       if(!offline){
         braintree.setup("<%= client_token %>", 'dropin', {
           container: 'dropin'

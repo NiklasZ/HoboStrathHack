@@ -53,7 +53,7 @@ app.get('/', function (req, res) {
     var player = getPlayer(uid);
 
     function render(token){
-        res.render('index', {client_token: token, name: name, volume: volume, paid: player.paid ? '$$$' : ''});
+        res.render('index', {client_token: token, name: name, volume: volume, paid: player.paid ? '$$$' : '', offline: OFFLINE});
     }
 
     if(OFFLINE){
