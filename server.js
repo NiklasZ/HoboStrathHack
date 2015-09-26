@@ -1,3 +1,5 @@
+OFFLINE = true;
+
 var _ = require('underscore');
 var seedrandom = require('seedrandom');
 var express = require('express');
@@ -50,9 +52,17 @@ app.get('/', function (req, res) {
 
     var player = getPlayer(uid);
 
-    gateway.clientToken.generate({}, function (err, response) {
-        res.render('index', {client_token: response.clientToken, name: name, volume: volume, paid: player.paid ? '$$$' : ''});
-    });
+    function render(token){
+        res.render('index', {client_token: token, name: name, volume: volume, paid: player.paid ? '$$$' : ''});
+    }
+
+    if(OFFLINE){
+        render('abc');
+    }else{
+        gateway.clientToken.generate({}, function (err, response) {
+            render(response.clientToken);
+        });
+    }
 });
 
 app.post('/checkout', function (req, res) {
