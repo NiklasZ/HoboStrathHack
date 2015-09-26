@@ -50,21 +50,50 @@ Ground = function (game) {
             }
         },
 
-        getPolygon: function (last_height, height, position) {
-            var h = app.height;
+        getCubicBezierPoint: function(points, t) {
             return [
-                position, h - last_height + this.THICKNESS,
-                position + this.SEGMENT_LENGTH, h - height + this.THICKNESS,
-                position + this.SEGMENT_LENGTH, h - height,
-                position, h - last_height
+                Math.pow((1-t),3)*points[0] + 3*t*Math.pow((1-t),2)*points[2] + 3*(1-t)*Math.pow(t,2)*points[4] + Math.pow(t,3)*points[6],
+                Math.pow((1-t),3)*points[1] + 3*t*Math.pow((1-t),2)*points[3] + 3*(1-t)*Math.pow(t,2)*points[5] + Math.pow(t,3)*points[7]
+            ];
+        },
+
+        getPolygon: function (height1, height2, height3, height4, position) {
+            var h = app.height;
+
+            var x1 = position - this.SEGMENT_LENGTH;
+            var x2 = position;
+            var x3 = position + this.SEGMENT_LENGTH;
+            var x4 = position + this.SEGMENT_LENGTH*2;
+
+            var anchor1 = [x2+(x3-x1)/8,height2+(height3-height1)/8];
+            var anchor2 = [x3+(x2-x4)/8,height3+(height2-height4)/8];
+
+            var midPoint1 = this.getCubicBezierPoint([x2, height2, anchor1[0], anchor1[1], anchor2[0], anchor2[1], x3, height3], 0.17);
+            var midPoint2 = this.getCubicBezierPoint([x2, height2, anchor1[0], anchor1[1], anchor2[0], anchor2[1], x3, height3], 0.33);
+            var midPoint3 = this.getCubicBezierPoint([x2, height2, anchor1[0], anchor1[1], anchor2[0], anchor2[1], x3, height3], 0.5);
+            var midPoint4 = this.getCubicBezierPoint([x2, height2, anchor1[0], anchor1[1], anchor2[0], anchor2[1], x3, height3], 0.67);
+            var midPoint5 = this.getCubicBezierPoint([x2, height2, anchor1[0], anchor1[1], anchor2[0], anchor2[1], x3, height3], 0.83);
+
+            return [
+                x2, h - height2 + this.THICKNESS,
+                midPoint1[0], h - midPoint1[1] + this.THICKNESS,
+                midPoint2[0], h - midPoint2[1] + this.THICKNESS,
+                midPoint3[0], h - midPoint3[1] + this.THICKNESS,
+                midPoint4[0], h - midPoint4[1] + this.THICKNESS,
+                midPoint5[0], h - midPoint5[1] + this.THICKNESS,
+                x3, h - height3 + this.THICKNESS,
+                x3, h - height3,
+                midPoint5[0], h - midPoint5[1],
+                midPoint4[0], h - midPoint4[1],
+                midPoint3[0], h - midPoint3[1],
+                midPoint2[0], h - midPoint2[1],
+                midPoint1[0], h - midPoint1[1],
+                x2, h - height2
             ];
         },
 
         drawPoly: function (pts, colour) {
-            var poly = new Phaser.Polygon([new Phaser.Point(pts[0] - 1, pts[1] + 1),
-                new Phaser.Point(pts[2] + 1, pts[3] + 1),
-                new Phaser.Point(pts[4] + 1, pts[5] - 1),
-                new Phaser.Point(pts[6] - 1, pts[7] - 1)]);
+            var poly = new Phaser.Polygon(pts);
             var graphics = this.game.add.graphics(0, 0);
             graphics.beginFill(colour);
             graphics.drawPolygon(poly.points);
@@ -86,11 +115,13 @@ Ground = function (game) {
 
         addSegment: function (position, height, raw, type) {
             var index = Math.floor(position / this.SEGMENT_LENGTH);
-            var lastHeight = this.heights[index - 1] ? this.heights[index - 1] : 200;
+            var beforeHeight = this.heights[index - 3] ? this.heights[index - 3] : 200;
+            var lastHeight = this.heights[index - 2] ? this.heights[index - 2] : 200;
+            var currentHeight = this.heights[index - 1] ? this.heights[index - 1] : 200;
             this.heights[index] = height;
-            var segmentShape = this.getPolygon(lastHeight, height, position);
-            var collisionPoly = this.getPolygon(lastHeight, height, position);
-            collisionPoly[1] = collisionPoly[3] = app.height + 500;
+            var segmentShape = this.getPolygon(beforeHeight, lastHeight, currentHeight, height, position);
+            var collisionPoly = this.getPolygon(beforeHeight, lastHeight, currentHeight, height, position);
+            collisionPoly[1] = collisionPoly[3] = collisionPoly[5] = collisionPoly[7] = collisionPoly[9] = collisionPoly[11] = collisionPoly[13] = app.height + 500;
 
             var segment = this._ground.create(0, 0);
             segment.visibility = false;
