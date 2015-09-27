@@ -1,4 +1,4 @@
-OFFLINE = true;
+OFFLINE = false;
 
 var _ = require('underscore');
 var seedrandom = require('seedrandom');
