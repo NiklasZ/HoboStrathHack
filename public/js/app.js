@@ -1,5 +1,6 @@
 app = {
     game: null,
+    seed: 0,
     width: 1500,
     height: 770,
     cursor: null,
@@ -59,11 +60,6 @@ $(function(){
             console.log('Connected to the server');
         });
 
-        app.socket.on('data', function(msg) {
-            console.log('Got data for ', msg);
-            app.ground.addSegment(msg.pos * app.ground.SEGMENT_LENGTH, msg.height, msg.raw, msg.type);
-        });
-
         app.socket.on('broadcast_positions', function(msg) {
             show_competitors(msg);
         }); 
@@ -76,6 +72,7 @@ $(function(){
         app.socket.on('track_info', function(msg) {
             console.log('Track info', msg);
             $('#info div:nth-child(1) p').text('Current track: ' + msg.name);
+            app.seed = msg.name;
         });
 
         app.socket.on('he_won', function(msg) {
@@ -144,6 +141,7 @@ function create() {
     app.player = new Player(app.game);
     app.player.name = $('#playername').val();
     app.ground = new Ground(app.game);
+    app.ground.seed = app.seed;
     app.ground.updateSegments();
     app.game.camera.follow(app.player.car.body);
 

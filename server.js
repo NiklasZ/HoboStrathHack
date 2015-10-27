@@ -1,13 +1,11 @@
 OFFLINE = false;
 
 var _ = require('underscore');
-var seedrandom = require('seedrandom');
 var express = require('express');
 var consolidate = require('consolidate');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var app = express();
-var segmentTypes = {NORMAL: 0, SPEEDUP: 1, BOUNCY: 2};
 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -103,30 +101,6 @@ io.on('connection', function (socket) {
         socket.emit('player_info', player.uid);
         socket.emit('track_info', {"name": seed});
 
-        socket.on('get_height', function(data) {
-            if(!heights[data]){
-                // Initialize randomness based on the seed
-                var rng = seedrandom(seed + data);
-
-                var previousHeight = heights[data-1] ? heights[data-1] : 200;
-                var previousHeight2 = heights[data-2] ? heights[data-2] : 200.1;
-                var slope = previousHeight - previousHeight2;
-
-                var p = (previousHeight + 50)/300;
-                var rand = rng() * 300 - 150;
-                var p2 = (slope + rand + 100) / 200;
-                var slopeChangeSize = 100;
-                var slopeChange = rng() * (slopeChangeSize - (slopeChangeSize * (p + p2)));
-
-                heights[data] = previousHeight + slope + slopeChange + rand;
-                if(heights[data] > 800)  { heights[data] = 800;  }
-                if(heights[data] < -100) { heights[data] = -100; }
-
-                slopeTypes[data] = generateTrackType(heights[data] - previousHeight, rng());
-            }
-            socket.emit('data', {"height": heights[data], "pos": data, "raw": heights[data], "type":slopeTypes[data]})
-        });
-
         socket.on('send_name', function(data) {
             player.name = data;
         });
@@ -162,20 +136,6 @@ setInterval(function() {
     });
     io.sockets.emit('broadcast_positions', data);
 }, 15);
-
-//Selects random track
-function generateTrackType(slope, rand){
-    var choice;
-
-    if(slope > 0 && rand < 0.1)
-        choice = segmentTypes.SPEEDUP;
-    else if(slope < 0 && rand < 0.1)
-        choice = segmentTypes.BOUNCY;
-    else
-        choice = segmentTypes.NORMAL;
-
-    return choice;
-}
 
 function generateRandomSeed(){
     var ret = '';

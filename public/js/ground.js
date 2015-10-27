@@ -1,4 +1,5 @@
 var segmentTypes = {NORMAL: 0, SPEEDUP: 1, BOUNCY: 2};
+
 Ground = function (game) {
     var obj = {
         SEGMENT_LENGTH: 100,
@@ -8,9 +9,10 @@ Ground = function (game) {
         game: game,
         _ground: game.add.group(),
         heights: {},
+        slopeTypes:[],
         emmited: -1,
         active_segment: null,
-
+        seed: -1,
         segments: {},
         materials: [],
         polygons: [],
@@ -24,6 +26,44 @@ Ground = function (game) {
             return this.heights[i];
         },
 
+        //Generates heights in online mode
+        generateOnlineHeight: function(index){
+                var rng = new Math.seedrandom(this.seed + index);
+                var previousHeight = this.heights[index-1] ? this.heights[index-1] : 200;
+                var previousHeight2 = this.heights[index-2] ? this.heights[index-2] : 200.1;
+                var slope = previousHeight - previousHeight2;
+
+                var p = (previousHeight + 50)/300;
+                var rand = rng() * 300 - 150;
+                var p2 = (slope + rand + 100) / 200;
+                var slopeChangeSize = 100;
+                var slopeChange = rng() * (slopeChangeSize - (slopeChangeSize * (p + p2)));
+
+                this.heights[index] = previousHeight + slope + slopeChange + rand;
+                if(this.heights[index] > 800)  { this.heights[index] = 800;  }
+                if(this.heights[index] < -100) { this.heights[index] = -100; }
+
+                this.slopeTypes[index] = this.generateTrackType(this.heights[index] - previousHeight, rng());
+
+                this.addLine(index * this.SEGMENT_LENGTH);
+                this.addSegment(index * this.SEGMENT_LENGTH, this.heights[index], this.heights[index], this.slopeTypes[index]);
+        },
+
+        generateTrackType: function(slope, rand){
+            var choice;
+
+            if(slope > 0 && rand < 0.1)
+                choice = segmentTypes.SPEEDUP;
+            else if(slope < 0 && rand < 0.1)
+                choice = segmentTypes.BOUNCY;
+            else
+                choice = segmentTypes.NORMAL;
+
+            return choice;
+        },
+
+
+        //Adds new segments either offline or online.
         updateSegments: function () {
             var x = app.player.car.body.x - 2000;
             var to = app.player.car.body.x + 2000;
@@ -35,16 +75,10 @@ Ground = function (game) {
                     if (!app.online) {
                         this.addLine(startX);
                         this.addSegment(startX, this.getHeight(index), this.getHeight(index), segmentTypes.NORMAL);
-                    } else {
-                        if (this.emmited < index) {
-                            this.addLine(startX);
-                            console.log('Emitting get_height with', index);
-                            this.emmited = index;
-                            app.socket.emit('get_height', index);
-                        }
+                    } 
+                    else {
+                        this.generateOnlineHeight(index);
                     }
-                }else if(!this.segments[index]){
-                    this.addSegment(startX, this.heights[index], this.heights[index], segmentTypes.NORMAL);
                 }
                 x += this.SEGMENT_LENGTH;
             }
