@@ -18,7 +18,7 @@ Installation
 Authors
 ------------
 
-* (adikus)[https://github.com/adikus]
-* (NiklasZ)[https://github.com/NiklasZ]
-* (kstanski)[https://github.com/kstanski]
-* (AndreeaLutac)[https://github.com/AndreeaLutac]
+* [adikus](https://github.com/adikus)
+* [NiklasZ](https://github.com/NiklasZ)
+* [kstanski](https://github.com/kstanski)
+* [AndreeaLutac](https://github.com/AndreeaLutac)
