@@ -14,3 +14,11 @@ Installation
 2. Checkout this git directory and run `npm install`
 3. Run `node server`
 4. In your browser navigate to [http://localhost:3000](http://localhost:3000)
+
+Authors
+------------
+
+* (adikus)[https://github.com/adikus]
+* (NiklasZ)[https://github.com/NiklasZ]
+* (kstanski)[https://github.com/kstanski]
+* (AndreeaLutac)[https://github.com/AndreeaLutac]
